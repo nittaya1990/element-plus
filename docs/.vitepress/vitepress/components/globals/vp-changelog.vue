@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import axios from 'axios'
 import VPLink from '../common/vp-link.vue'
 import VPMarkdown from '../common/vp-markdown.vue'
 import { useLang } from '../../composables/lang'
 import { useLocale } from '../../composables/locale'
 import changelogLocale from '../../../i18n/component/changelog.json'
 
+interface Release {
+  id: number
+  name: string
+}
+
 const loading = ref(true)
-const releases = ref([])
+const releases = ref<Release[]>([])
 const currentRelease = ref()
 const changelog = useLocale(changelogLocale)
 const lang = useLang()
@@ -20,12 +24,18 @@ const onVersionChange = (val) => {
 
 onMounted(async () => {
   try {
-    const { data } = await axios.get(
+    const response = await fetch(
       'https://api.github.com/repos/element-plus/element-plus/releases'
     )
-    releases.value = data
-    currentRelease.value = data[0]
-  } catch (e) {
+    const data: Release[] = await response.json()
+    if (response.ok) {
+      releases.value = data
+      currentRelease.value = data[0]
+    } else {
+      releases.value = []
+      currentRelease.value = undefined
+    }
+  } catch {
     releases.value = []
     currentRelease.value = undefined
     // do something
@@ -44,7 +54,7 @@ onMounted(async () => {
           <ElSelect
             :model-value="currentRelease.name"
             :placeholder="changelog['select-version']"
-            style="min-width: 200px"
+            style="width: 200px"
             @change="onVersionChange"
           >
             <ElOption

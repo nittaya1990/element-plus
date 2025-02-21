@@ -1,22 +1,19 @@
 <template>
   <el-checkbox-group v-model="checkList">
-    <el-checkbox label="Option A" />
-    <el-checkbox label="Option B" />
-    <el-checkbox label="Option C" />
-    <el-checkbox label="disabled" disabled />
-    <el-checkbox label="selected and disabled" disabled />
+    <el-checkbox label="Option A" value="Value A" />
+    <el-checkbox label="Option B" value="Value B" />
+    <el-checkbox label="Option C" value="Value C" />
+    <el-checkbox label="disabled" value="Value disabled" disabled />
+    <el-checkbox
+      label="selected and disabled"
+      value="Value selected and disabled"
+      disabled
+    />
   </el-checkbox-group>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script lang="ts" setup>
+import { ref } from 'vue'
 
-export default defineComponent({
-  setup() {
-    const checkList = ref(['selected and disabled', 'Option A'])
-    return {
-      checkList,
-    }
-  },
-})
+const checkList = ref(['Value selected and disabled', 'Value A'])
 </script>

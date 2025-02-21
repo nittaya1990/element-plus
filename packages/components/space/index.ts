@@ -1,13 +1,11 @@
-import Space from './src/index'
+import { withInstall } from '@element-plus/utils'
 
-import type { App } from 'vue'
-import type { SFCWithInstall } from '@element-plus/utils/types'
+import Space from './src/space'
+import type { SFCWithInstall } from '@element-plus/utils'
 
-const _Space = Space as SFCWithInstall<typeof Space>
+export const ElSpace: SFCWithInstall<typeof Space> = withInstall(Space)
+export default ElSpace
 
-_Space.install = (app: App) => {
-  app.component(_Space.name, _Space)
-}
-
-export default _Space
-export const ElSpace = _Space
+export * from './src/space'
+export * from './src/item'
+export * from './src/use-space'

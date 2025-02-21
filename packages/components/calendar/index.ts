@@ -1,12 +1,13 @@
-import Calendar from './src/index.vue'
-import type { App } from 'vue'
-import type { SFCWithInstall } from '@element-plus/utils/types'
+import { withInstall } from '@element-plus/utils'
+import Calendar from './src/calendar.vue'
+import type { SFCWithInstall } from '@element-plus/utils'
 
-Calendar.install = (app: App): void => {
-  app.component(Calendar.name, Calendar)
-}
+export const ElCalendar: SFCWithInstall<typeof Calendar> = withInstall(Calendar)
+export default ElCalendar
 
-const _Calendar = Calendar as SFCWithInstall<typeof Calendar>
-
-export default _Calendar
-export const ElCalendar = _Calendar
+export * from './src/calendar'
+export type {
+  CalendarDateTableInstance,
+  DateTableInstance,
+  CalendarInstance,
+} from './src/instance'

@@ -1,3 +1,8 @@
+---
+title: Breadcrumb
+lang: en-US
+---
+
 # Breadcrumb
 
 Displays the location of the current page, making it easier to browser back.
@@ -12,22 +17,38 @@ breadcrumb/basic
 
 ## Icon separator
 
-:::demo Set `separator-class` to use `iconfont` as the separator，it will cover `separator`
+:::demo Set `separator-icon` to use `svg icon` as the separator，it will cover `separator`
 
 breadcrumb/icon
 
 :::
 
-## Breadcrumb Attributes
+## Breadcrumb API
 
-| Attribute       | Description                  | Type   | Accepted Values | Default |
-| --------------- | ---------------------------- | ------ | --------------- | ------- |
-| separator       | separator character          | string | —               | /       |
-| separator-class | class name of icon separator | string | —               | -       |
+### Attributes
 
-## Breadcrumb Item Attributes
+| Name           | Description                      | Type                     | Default |
+| -------------- | -------------------------------- | ------------------------ | ------- |
+| separator      | separator character              | ^[string]                | /       |
+| separator-icon | icon component of icon separator | ^[string] / ^[Component] | —       |
 
-| Attribute | Description                                               | Type          | Accepted Values | Default |
-| --------- | --------------------------------------------------------- | ------------- | --------------- | ------- |
-| to        | target route of the link, same as `to` of `vue-router`    | string/object | —               | —       |
-| replace   | if `true`, the navigation will not leave a history record | boolean       | —               | false   |
+### Slots
+
+| Name    | Description               | Subtags         |
+| ------- | ------------------------- | --------------- |
+| default | customize default content | Breadcrumb Item |
+
+## Breadcrumb-Item API
+
+### Attributes
+
+| Name    | Description                                               | Type                                    | Default |
+| ------- | --------------------------------------------------------- | --------------------------------------- | ------- |
+| to      | target route of the link, same as `to` of `vue-router`    | ^[string] / ^[object]`RouteLocationRaw` | ''      |
+| replace | if `true`, the navigation will not leave a history record | ^[boolean]                              | false   |
+
+### Slots
+
+| Name    | Description               |
+| ------- | ------------------------- |
+| default | customize default content |

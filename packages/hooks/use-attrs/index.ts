@@ -1,20 +1,24 @@
-import { getCurrentInstance, computed } from 'vue'
-import fromPairs from 'lodash/fromPairs'
-import { debugWarn } from '@element-plus/utils/error'
+import { computed, getCurrentInstance } from 'vue'
+import { fromPairs } from 'lodash-unified'
+import { debugWarn } from '@element-plus/utils'
 
 import type { ComputedRef } from 'vue'
 
 interface Params {
   excludeListeners?: boolean
-  excludeKeys?: string[]
+  excludeKeys?: ComputedRef<string[]>
 }
 
 const DEFAULT_EXCLUDE_KEYS = ['class', 'style']
 const LISTENER_PREFIX = /^on[A-Z]/
 
-export default (params: Params = {}): ComputedRef<Record<string, unknown>> => {
-  const { excludeListeners = false, excludeKeys = [] } = params
-  const allExcludeKeys = excludeKeys.concat(DEFAULT_EXCLUDE_KEYS)
+export const useAttrs = (
+  params: Params = {}
+): ComputedRef<Record<string, unknown>> => {
+  const { excludeListeners = false, excludeKeys } = params
+  const allExcludeKeys = computed<string[]>(() => {
+    return (excludeKeys?.value || []).concat(DEFAULT_EXCLUDE_KEYS)
+  })
 
   const instance = getCurrentInstance()
   if (!instance) {
@@ -27,9 +31,9 @@ export default (params: Params = {}): ComputedRef<Record<string, unknown>> => {
 
   return computed(() =>
     fromPairs(
-      Object.entries(instance.proxy?.$attrs).filter(
+      Object.entries(instance.proxy?.$attrs!).filter(
         ([key]) =>
-          !allExcludeKeys.includes(key) &&
+          !allExcludeKeys.value.includes(key) &&
           !(excludeListeners && LISTENER_PREFIX.test(key))
       )
     )

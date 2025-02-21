@@ -1,21 +1,16 @@
 <template>
   <div
-    v-if="item.isTitle"
-    class="el-select-group__title"
-    :style="[style, { lineHeight: `${height}px` }]"
+    :class="ns.be('group', 'title')"
+    :style="{ ...style, lineHeight: `${height}px` }"
   >
     {{ item.label }}
-  </div>
-  <div v-else class="el-select-group__split" :style="style">
-    <span
-      class="el-select-group__split-dash"
-      :style="{ top: `${height / 2}px` }"
-    ></span>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { useNamespace } from '@element-plus/hooks'
+import type { CSSProperties, PropType } from 'vue'
 
 export default defineComponent({
   props: {
@@ -23,8 +18,16 @@ export default defineComponent({
       type: Object,
       required: true,
     },
-    style: Object,
+    style: {
+      type: Object as PropType<CSSProperties>,
+    },
     height: Number,
+  },
+  setup() {
+    const ns = useNamespace('select')
+    return {
+      ns,
+    }
   },
 })
 </script>

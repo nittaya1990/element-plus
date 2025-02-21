@@ -1,3 +1,8 @@
+---
+title: Steps
+lang: en-US
+---
+
 # Steps
 
 Guide the user to complete tasks in accordance with the process. Its steps can be set according to the actual application scenario and the number of the steps can't be less than 2.
@@ -72,28 +77,38 @@ steps/simple
 
 :::
 
-## Steps Attributes
+## Steps API
 
-| Attribute      | Description                                                                   | Type            | Accepted Values                           | Default    |
-| -------------- | ----------------------------------------------------------------------------- | --------------- | ----------------------------------------- | ---------- |
-| space          | the spacing of each step, will be responsive if omitted. Supports percentage. | number / string | —                                         | —          |
-| direction      | display direction                                                             | string          | vertical/horizontal                       | horizontal |
-| active         | current activation step                                                       | number          | —                                         | 0          |
-| process-status | status of current step                                                        | string          | wait / process / finish / error / success | process    |
-| finish-status  | status of end step                                                            | string          | wait / process / finish / error / success | finish     |
-| align-center   | center title and description                                                  | boolean         | —                                         | false      |
-| simple         | whether to apply simple theme                                                 | boolean         | -                                         | false      |
+### Attributes
 
-## Step Attributes
+| Name           | Description                                                                   | Type                                                             | Default    |
+| -------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------- | ---------- |
+| space          | the spacing of each step, will be responsive if omitted. Supports percentage. | ^[number] / ^[string]                                            | ''         |
+| direction      | display direction                                                             | ^[enum]`'vertical' \| 'horizontal'`                              | horizontal |
+| active         | current activation step                                                       | ^[number]                                                        | 0          |
+| process-status | status of current step                                                        | ^[enum]`'wait' \| 'process' \| 'finish' \| 'error' \| 'success'` | process    |
+| finish-status  | status of end step                                                            | ^[enum]`'wait' \| 'process' \| 'finish' \| 'error' \| 'success'` | finish     |
+| align-center   | center title and description                                                  | ^[boolean]                                                       | —          |
+| simple         | whether to apply simple theme                                                 | ^[boolean]                                                       | —          |
 
-| Attribute   | Description                                                              | Type   | Accepted Values                           | Default |
-| ----------- | ------------------------------------------------------------------------ | ------ | ----------------------------------------- | ------- |
-| title       | step title                                                               | string | —                                         | —       |
-| description | step description                                                         | string | —                                         | —       |
-| icon        | step icon's class name. Icons can be passed via named slot as well       | string | —                                         | —       |
-| status      | current status. It will be automatically set by Steps if not configured. | string | wait / process / finish / error / success | —       |
+### Slots
 
-## Step Slots
+| Name    | Description               | Subtags |
+| ------- | ------------------------- | ------- |
+| default | customize default content | Step    |
+
+## Step API
+
+### Attributes
+
+| Name        | Description                                                              | Type                                                                   | Default |
+| ----------- | ------------------------------------------------------------------------ | ---------------------------------------------------------------------- | ------- |
+| title       | step title                                                               | ^[string]                                                              | ''      |
+| description | step description                                                         | ^[string]                                                              | ''      |
+| icon        | step custom icon. Icons can be passed via named slot as well             | ^[string] / ^[Component]                                               | —       |
+| status      | current status. It will be automatically set by Steps if not configured. | ^[enum]`'' \| 'wait' \| 'process' \| 'finish' \| 'error' \| 'success'` | ''      |
+
+### Slots
 
 | Name        | Description      |
 | ----------- | ---------------- |

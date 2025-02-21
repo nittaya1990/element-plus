@@ -1,3 +1,8 @@
+---
+title: Tag
+lang: en-US
+---
+
 # Tag
 
 Used for marking and selection.
@@ -32,7 +37,7 @@ tag/editable
 
 Besides default size, Tag component provides three additional sizes for you to choose among different scenarios.
 
-:::demo Use attribute `size` to set additional sizes with `medium`, `small` or `mini`.
+:::demo Use attribute `size` to set additional sizes with `large`, `default` or `small`.
 
 tag/sizes
 
@@ -48,9 +53,19 @@ tag/theme
 
 :::
 
-## Checkable tag
+## Rounded
 
-Sometimes because of the business needs, we might need checkbox like tag, but **button like checkbox** cannot meet our needs, here comes `check-tag`
+Tag can also be rounded like button.
+
+:::demo
+
+tag/rounded
+
+:::
+
+## Checkable Tag
+
+Sometimes because of the business needs, we might need checkbox like tag, but **button like checkbox** cannot meet our needs, here comes `check-tag`. You can use `type` prop in ^(2.5.4).
 
 :::demo basic check-tag usage, the API is rather simple.
 
@@ -58,33 +73,52 @@ tag/checkable
 
 :::
 
-## Attributes
+## Tag API
 
-| Attribute           | Description                          | Type    | Accepted Values             | Default |
-| ------------------- | ------------------------------------ | ------- | --------------------------- | ------- |
-| type                | component type                       | string  | success/info/warning/danger | —       |
-| closable            | whether Tag can be removed           | boolean | —                           | false   |
-| disable-transitions | whether to disable animations        | boolean | —                           | false   |
-| hit                 | whether Tag has a highlighted border | boolean | —                           | false   |
-| color               | background color of the Tag          | string  | —                           | —       |
-| size                | tag size                             | string  | medium / small / mini       | —       |
-| effect              | component theme                      | string  | dark / light / plain        | light   |
+### Attributes
 
-## Events
+| Name                | Description                          | Type                                                               | Default |
+| ------------------- | ------------------------------------ | ------------------------------------------------------------------ | ------- |
+| type                | type of Tag                          | ^[enum]`'primary' \| 'success' \| 'info' \| 'warning' \| 'danger'` | primary |
+| closable            | whether Tag can be removed           | ^[boolean]                                                         | false   |
+| disable-transitions | whether to disable animations        | ^[boolean]                                                         | false   |
+| hit                 | whether Tag has a highlighted border | ^[boolean]                                                         | false   |
+| color               | background color of the Tag          | ^[string]                                                          | —       |
+| size                | size of Tag                          | ^[enum]`'large' \| 'default' \| 'small'`                           | —       |
+| effect              | theme of Tag                         | ^[enum]`'dark' \| 'light' \| 'plain'`                              | light   |
+| round               | whether Tag is rounded               | ^[boolean]                                                         | false   |
 
-| Event Name | Description                  | Parameters |
-| ---------- | ---------------------------- | ---------- |
-| click      | triggers when Tag is clicked | —          |
-| close      | triggers when Tag is removed | —          |
+### Events
 
-## CheckTag Attributes
+| Name  | Description                  | Type                                   |
+| ----- | ---------------------------- | -------------------------------------- |
+| click | triggers when Tag is clicked | ^[Function]`(evt: MouseEvent) => void` |
+| close | triggers when Tag is removed | ^[Function]`(evt: MouseEvent) => void` |
 
-| Attribute | Description | Type    | Accepted Values | Default |
-| --------- | ----------- | ------- | --------------- | ------- |
-| checked   | is checked  | boolean | true/false      | —       |
+### Slots
 
-## CheckTag Events
+| Name    | Description               |
+| ------- | ------------------------- |
+| default | customize default content |
 
-| Event Name | Description                        | Parameters |
-| ---------- | ---------------------------------- | ---------- |
-| change     | triggers when Check Tag is clicked | checked    |
+## CheckTag API
+
+### Attributes
+
+| Name                      | Description                       | Type                                                               | Default |
+| ------------------------- | --------------------------------- | ------------------------------------------------------------------ | ------- |
+| checked / v-model:checked | is checked                        | ^[boolean]                                                         | false   |
+| disabled ^(2.8.2)         | whether the check-tag is disabled | ^[boolean]                                                         | false   |
+| type ^(2.5.4)             | type of CheckTag                  | ^[enum]`'primary' \| 'success' \| 'info' \| 'warning' \| 'danger'` | primary |
+
+### Events
+
+| Name   | Description                        | Type                                  |
+| ------ | ---------------------------------- | ------------------------------------- |
+| change | triggers when Check Tag is clicked | ^[Function]`(value: boolean) => void` |
+
+### Slots
+
+| Name    | Description               |
+| ------- | ------------------------- |
+| default | customize default content |

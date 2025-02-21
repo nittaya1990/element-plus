@@ -1,13 +1,9 @@
-import Rate from './src/index.vue'
+import { withInstall } from '@element-plus/utils'
 
-import type { App } from 'vue'
-import type { SFCWithInstall } from '@element-plus/utils/types'
+import Rate from './src/rate.vue'
+import type { SFCWithInstall } from '@element-plus/utils'
 
-Rate.install = (app: App): void => {
-  app.component(Rate.name, Rate)
-}
+export const ElRate: SFCWithInstall<typeof Rate> = withInstall(Rate)
+export default ElRate
 
-const _Rate = Rate as SFCWithInstall<typeof Rate>
-
-export default _Rate
-export const ElRate = _Rate
+export * from './src/rate'

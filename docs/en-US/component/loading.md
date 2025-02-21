@@ -1,3 +1,8 @@
+---
+title: Loading
+lang: en-US
+---
+
 # Loading
 
 Show animation while loading data.
@@ -16,7 +21,7 @@ loading/basic
 
 You can customize loading text, loading spinner and background color.
 
-:::demo Add attribute `element-loading-text` to the element on which `v-loading` is bound, and its value will be displayed under the spinner. Similarly, the `element-loading-spinner`, `element-loading-background`, and `element-loading-svg` attributes are used to set the icon class name, background color value, and loading icon, respectively.
+:::demo Add attribute `element-loading-text` to the element on which `v-loading` is bound, and its value will be displayed under the spinner. Similarly, the `element-loading-spinner / element-loading-svg` and `element-loading-background` attributes are used to set the svg icon, background color value, and loading icon, respectively.
 
 loading/customization
 
@@ -24,7 +29,7 @@ loading/customization
 
 :::warning
 
-Although the `element-loading-svg` attribute supports incoming HTML fragments, it is very dangerous to dynamically render arbitrary HTML on the website, because it is easy to cause [XSS attack](https://en.wikipedia.org/wiki/Cross-site_scripting). Please make sure that the content of `element-loading-svg` is trustworthy. **Never** assign user-submitted content to the `element-loading-svg` attribute.
+Although the `element-loading-spinner / element-loading-svg` attribute supports incoming HTML fragments, it is very dangerous to dynamically render arbitrary HTML on the website, because it is easy to cause [XSS attack](https://en.wikipedia.org/wiki/Cross-site_scripting). Please make sure that the content of `element-loading-spinner / element-loading-svg` is trustworthy. **Never** assign user-submitted content to the `element-loading-spinner / element-loading-svg` attribute.
 
 :::
 
@@ -74,24 +79,33 @@ Calling the `close` method on any one of them can close this full screen Loading
 
 If Element Plus is imported entirely, a globally method `$loading` will be registered to `app.config.globalProperties`. You can invoke it like this: `this.$loading(options)`, and it also returns a Loading instance.
 
-## Options
+## API
 
-| Attribute    | Description                                                                                                                                                              | Type          | Accepted Values | Default       |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- | --------------- | ------------- |
-| target       | the DOM node Loading needs to cover. Accepts a DOM object or a string. If it's a string, it will be passed to `document.querySelector` to get the corresponding DOM node | object/string | —               | document.body |
-| body         | same as the `body` modifier of `v-loading`                                                                                                                               | boolean       | —               | false         |
-| fullscreen   | same as the `fullscreen` modifier of `v-loading`                                                                                                                         | boolean       | —               | true          |
-| lock         | same as the `lock` modifier of `v-loading`                                                                                                                               | boolean       | —               | false         |
-| text         | loading text that displays under the spinner                                                                                                                             | string        | —               | —             |
-| spinner      | class name of the custom spinner                                                                                                                                         | string        | —               | —             |
-| background   | background color of the mask                                                                                                                                             | string        | —               | —             |
-| custom-class | custom class name for Loading                                                                                                                                            | string        | —               | —             |
+### Options
 
-## Directives
+| Name                 | Description                                                                                                                                                              | Type                       | Default       |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------- | ------------- |
+| target               | the DOM node Loading needs to cover. Accepts a DOM object or a string. If it's a string, it will be passed to `document.querySelector` to get the corresponding DOM node | ^[string] / ^[HTMLElement] | document.body |
+| body                 | same as the `body` modifier of `v-loading`                                                                                                                               | ^[boolean]                 | false         |
+| fullscreen           | same as the `fullscreen` modifier of `v-loading`                                                                                                                         | ^[boolean]                 | true          |
+| lock                 | same as the `lock` modifier of `v-loading`                                                                                                                               | ^[boolean]                 | false         |
+| text                 | loading text that displays under the spinner                                                                                                                             | ^[string]                  | —             |
+| spinner              | class name of the custom spinner                                                                                                                                         | ^[string]                  | —             |
+| background           | background color of the mask                                                                                                                                             | ^[string]                  | —             |
+| customClass          | custom class name for loading                                                                                                                                            | ^[string]                  | —             |
+| svg                  | custom SVG element to override the default loading spinner                                                                                                               | ^[string]                  | —             |
+| svgViewBox           | sets the viewBox attribute for loading svg element                                                                                                                       | ^[string]                  | —             |
+| beforeClose ^(2.7.8) | Function executed before loading attempts to close. If this function returns false, the closing process will be aborted. Otherwise, the loading will close.              | ^[Function]`() => boolean` | —             |
+| closed ^(2.7.8)      | Function triggered after loading has completely closed                                                                                                                   | ^[Function]`() => void`    | —             |
 
-| Name                       | Description                                  | Type    |
-| -------------------------- | -------------------------------------------- | ------- |
-| v-loading                  | show animation while loading data            | boolean |
-| element-loading-text       | loading text that displays under the spinner | string  |
-| element-loading-spinner    | class name of the custom spinner             | string  |
-| element-loading-background | background color of the mask                 | string  |
+### Directives
+
+| Name                         | Description                                                  | Type                           |
+| ---------------------------- | ------------------------------------------------------------ | ------------------------------ |
+| v-loading                    | show animation while loading data                            | ^[boolean] / ^[LoadingOptions] |
+| element-loading-text         | loading text that displays under the spinner                 | ^[string]                      |
+| element-loading-spinner      | icon of the custom spinner                                   | ^[string]                      |
+| element-loading-svg          | icon of the custom spinner (same as element-loading-spinner) | ^[string]                      |
+| element-loading-svg-view-box | sets the viewBox attribute for loading svg element           | ^[string]                      |
+| element-loading-background   | background color of the mask                                 | ^[string]                      |
+| element-loading-custom-class | custom class name for loading                                | ^[string]                      |

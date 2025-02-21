@@ -1,16 +1,18 @@
-import { buildProp, definePropType } from '@element-plus/utils/props'
-
+import { buildProps, definePropType } from '@element-plus/utils'
 import type { ExtractPropTypes } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 
-export const breadcrumbItemProps = {
-  to: buildProp({
+export const breadcrumbItemProps = buildProps({
+  /**
+   * @description target route of the link, same as `to` of `vue-router`
+   */
+  to: {
     type: definePropType<RouteLocationRaw>([String, Object]),
     default: '',
-  } as const),
-  replace: {
-    type: Boolean,
-    default: false,
   },
-} as const
+  /**
+   * @description if `true`, the navigation will not leave a history record
+   */
+  replace: Boolean,
+} as const)
 export type BreadcrumbItemProps = ExtractPropTypes<typeof breadcrumbItemProps>

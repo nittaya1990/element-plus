@@ -1,5 +1,11 @@
-import { isFunction } from '@vue/shared'
-import { capitalize, isUndefined, isEmpty } from '@element-plus/utils/util'
+// @ts-nocheck
+import {
+  capitalize,
+  isArray,
+  isEmpty,
+  isFunction,
+  isUndefined,
+} from '@element-plus/utils'
 import type { VNode } from 'vue'
 
 export type CascaderNodeValue = string | number
@@ -9,10 +15,7 @@ export type CascaderValue =
   | CascaderNodePathValue
   | (CascaderNodeValue | CascaderNodePathValue)[]
 export type CascaderConfig = Required<CascaderProps>
-export enum ExpandTrigger {
-  CLICK = 'click',
-  HOVER = 'hover',
-}
+export type ExpandTrigger = 'click' | 'hover'
 export type isDisabled = (data: CascaderOption, node: Node) => boolean
 export type isLeaf = (data: CascaderOption, node: Node) => boolean
 export type Resolve = (dataList?: CascaderOption[]) => void
@@ -75,8 +78,23 @@ class Node {
   children: Node[]
   text: string
   loaded: boolean
+  /**
+   * Is it checked
+   *
+   * @default false
+   */
   checked = false
+  /**
+   * Used to indicate the intermediate state of unchecked and fully checked child nodes
+   *
+   * @default false
+   */
   indeterminate = false
+  /**
+   * Loading Status
+   *
+   * @default false
+   */
   loading = false
 
   constructor(
@@ -120,7 +138,7 @@ class Node {
     return isUndefined(isLeaf)
       ? lazy && !loaded
         ? false
-        : !Array.isArray(childrenData)
+        : !(isArray(childrenData) && childrenData.length)
       : !!isLeaf
   }
 
@@ -132,7 +150,7 @@ class Node {
     const { childrenData, children } = this
     const node = new Node(childData, this.config, this)
 
-    if (Array.isArray(childrenData)) {
+    if (isArray(childrenData)) {
       childrenData.push(childData)
     } else {
       this.childrenData = [childData]
@@ -194,7 +212,9 @@ class Node {
 
     this.checked =
       this.loaded &&
-      this.children.every((child) => child.loaded && child.checked) &&
+      this.children
+        .filter((child) => !child.isDisabled)
+        .every((child) => child.loaded && child.checked) &&
       checked
     this.indeterminate =
       this.loaded && checkedNum !== totalNum && checkedNum > 0

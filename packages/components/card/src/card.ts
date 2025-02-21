@@ -1,19 +1,36 @@
-import { buildProp, definePropType } from '@element-plus/utils/props'
-import type { ExtractPropTypes } from 'vue'
-import type { StyleValue } from '@element-plus/utils/types'
+import { buildProps, definePropType } from '@element-plus/utils'
+import type { ExtractPropTypes, StyleValue } from 'vue'
 
-export const cardProps = {
+export const cardProps = buildProps({
+  /**
+   * @description title of the card. Also accepts a DOM passed by `slot#header`
+   */
   header: {
     type: String,
     default: '',
   },
-  bodyStyle: buildProp({
-    type: definePropType<StyleValue>([String, Object, Array]),
-    default: '',
-  } as const),
-  shadow: {
+  footer: {
     type: String,
     default: '',
   },
-} as const
+  /**
+   * @description CSS style of card body
+   */
+  bodyStyle: {
+    type: definePropType<StyleValue>([String, Object, Array]),
+    default: '',
+  },
+  /**
+   * @description custom class name of card body
+   */
+  bodyClass: String,
+  /**
+   * @description when to show card shadows
+   */
+  shadow: {
+    type: String,
+    values: ['always', 'hover', 'never'],
+    default: 'always',
+  },
+} as const)
 export type CardProps = ExtractPropTypes<typeof cardProps>

@@ -1,30 +1,32 @@
 <template>
-  <div class="el-color-hue-slider" :class="{ 'is-vertical': vertical }">
-    <div ref="bar" class="el-color-hue-slider__bar" @click="handleClick"></div>
+  <div :class="[ns.b(), ns.is('vertical', vertical)]">
+    <div ref="bar" :class="ns.e('bar')" @click="handleClick" />
     <div
       ref="thumb"
-      class="el-color-hue-slider__thumb"
+      :class="ns.e('thumb')"
       :style="{
         left: thumbLeft + 'px',
         top: thumbTop + 'px',
       }"
-    ></div>
+    />
   </div>
 </template>
 
 <script lang="ts">
 import {
-  ref,
   computed,
-  watch,
-  onMounted,
-  getCurrentInstance,
   defineComponent,
+  getCurrentInstance,
+  onMounted,
+  ref,
+  watch,
 } from 'vue'
-import draggable from '../draggable'
+import { getClientXY } from '@element-plus/utils'
+import { useNamespace } from '@element-plus/hooks'
+import { draggable } from '../utils/draggable'
 
 import type { PropType } from 'vue'
-import type Color from '../color'
+import type Color from '../utils/color'
 
 export default defineComponent({
   name: 'ElColorHueSlider',
@@ -38,10 +40,11 @@ export default defineComponent({
     vertical: Boolean,
   },
   setup(props) {
-    const instance = getCurrentInstance()
+    const ns = useNamespace('color-hue-slider')
+    const instance = getCurrentInstance()!
     // ref
-    const thumb = ref<HTMLElement | null>(null)
-    const bar = ref<HTMLElement | null>(null)
+    const thumb = ref<HTMLElement>()
+    const bar = ref<HTMLElement>()
     // data
     const thumbLeft = ref(0)
     const thumbTop = ref(0)
@@ -56,21 +59,26 @@ export default defineComponent({
         update()
       }
     )
+
     // methods
-    function handleClick(event: Event) {
+    function handleClick(event: MouseEvent | TouchEvent) {
       const target = event.target
 
       if (target !== thumb.value) {
         handleDrag(event)
       }
     }
-    function handleDrag(event) {
+
+    function handleDrag(event: MouseEvent | TouchEvent) {
+      if (!bar.value || !thumb.value) return
+
       const el = instance.vnode.el as HTMLElement
       const rect = el.getBoundingClientRect()
+      const { clientX, clientY } = getClientXY(event)
       let hue
 
       if (!props.vertical) {
-        let left = event.clientX - rect.left
+        let left = clientX - rect.left
         left = Math.min(left, rect.width - thumb.value.offsetWidth / 2)
         left = Math.max(thumb.value.offsetWidth / 2, left)
 
@@ -80,7 +88,7 @@ export default defineComponent({
             360
         )
       } else {
-        let top = event.clientY - rect.top
+        let top = clientY - rect.top
 
         top = Math.min(top, rect.height - thumb.value.offsetHeight / 2)
         top = Math.max(thumb.value.offsetHeight / 2, top)
@@ -92,7 +100,10 @@ export default defineComponent({
       }
       props.color.set('hue', hue)
     }
+
     function getThumbLeft() {
+      if (!thumb.value) return 0
+
       const el = instance.vnode.el
 
       if (props.vertical) return 0
@@ -105,6 +116,8 @@ export default defineComponent({
     }
 
     function getThumbTop() {
+      if (!thumb.value) return 0
+
       const el = instance.vnode.el as HTMLElement
       if (!props.vertical) return 0
       const hue = props.color.get('hue')
@@ -114,17 +127,21 @@ export default defineComponent({
         (hue * (el.offsetHeight - thumb.value.offsetHeight / 2)) / 360
       )
     }
+
     function update() {
       thumbLeft.value = getThumbLeft()
       thumbTop.value = getThumbTop()
     }
+
     // mounded
     onMounted(() => {
+      if (!bar.value || !thumb.value) return
+
       const dragConfig = {
-        drag: (event) => {
+        drag: (event: MouseEvent | TouchEvent) => {
           handleDrag(event)
         },
-        end: (event) => {
+        end: (event: MouseEvent | TouchEvent) => {
           handleDrag(event)
         },
       }
@@ -142,6 +159,7 @@ export default defineComponent({
       hueValue,
       handleClick,
       update,
+      ns,
     }
   },
 })

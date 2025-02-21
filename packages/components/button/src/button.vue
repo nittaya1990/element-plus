@@ -1,65 +1,74 @@
 <template>
-  <button
-    :class="[
-      'el-button',
-      buttonType ? 'el-button--' + buttonType : '',
-      buttonSize ? 'el-button--' + buttonSize : '',
-      {
-        'is-disabled': buttonDisabled,
-        'is-loading': loading,
-        'is-plain': plain,
-        'is-round': round,
-        'is-circle': circle,
-      },
-    ]"
-    :disabled="buttonDisabled || loading"
-    :autofocus="autofocus"
-    :type="nativeType"
+  <component
+    :is="tag"
+    ref="_ref"
+    v-bind="_props"
+    :class="buttonKls"
+    :style="buttonStyle"
     @click="handleClick"
   >
-    <i v-if="loading" class="el-icon-loading"></i>
-    <i v-if="icon && !loading" :class="icon"></i>
-    <span v-if="$slots.default"><slot></slot></span>
-  </button>
+    <template v-if="loading">
+      <slot v-if="$slots.loading" name="loading" />
+      <el-icon v-else :class="ns.is('loading')">
+        <component :is="loadingIcon" />
+      </el-icon>
+    </template>
+    <el-icon v-else-if="icon || $slots.icon">
+      <component :is="icon" v-if="icon" />
+      <slot v-else name="icon" />
+    </el-icon>
+    <span
+      v-if="$slots.default"
+      :class="{ [ns.em('text', 'expand')]: shouldAddSpace }"
+    >
+      <slot />
+    </span>
+  </component>
 </template>
 
-<script lang="ts">
-import { computed, inject, defineComponent } from 'vue'
-import { useFormItem } from '@element-plus/hooks'
-import { elButtonGroupKey, elFormKey } from '@element-plus/tokens'
-
+<script lang="ts" setup>
+import { computed } from 'vue'
+import { ElIcon } from '@element-plus/components/icon'
+import { useNamespace } from '@element-plus/hooks'
+import { useButton } from './use-button'
 import { buttonEmits, buttonProps } from './button'
-export default defineComponent({
+import { useButtonCustomStyle } from './button-custom'
+
+defineOptions({
   name: 'ElButton',
+})
 
-  props: buttonProps,
-  emits: buttonEmits,
+const props = defineProps(buttonProps)
+const emit = defineEmits(buttonEmits)
 
-  setup(props, { emit }) {
-    const elBtnGroup = inject(elButtonGroupKey, undefined)
-    const { size: buttonSize, disabled: buttonDisabled } = useFormItem({
-      size: computed(() => elBtnGroup?.size),
-    })
-    const buttonType = computed(
-      () => props.type || elBtnGroup?.type || 'default'
-    )
+const buttonStyle = useButtonCustomStyle(props)
+const ns = useNamespace('button')
+const { _ref, _size, _type, _disabled, _props, shouldAddSpace, handleClick } =
+  useButton(props, emit)
+const buttonKls = computed(() => [
+  ns.b(),
+  ns.m(_type.value),
+  ns.m(_size.value),
+  ns.is('disabled', _disabled.value),
+  ns.is('loading', props.loading),
+  ns.is('plain', props.plain),
+  ns.is('round', props.round),
+  ns.is('circle', props.circle),
+  ns.is('text', props.text),
+  ns.is('link', props.link),
+  ns.is('has-bg', props.bg),
+])
 
-    const elForm = inject(elFormKey, undefined)
-
-    const handleClick = (evt: MouseEvent) => {
-      if (props.nativeType === 'reset') {
-        elForm?.resetFields()
-      }
-      emit('click', evt)
-    }
-
-    return {
-      buttonSize,
-      buttonType,
-      buttonDisabled,
-
-      handleClick,
-    }
-  },
+defineExpose({
+  /** @description button html element */
+  ref: _ref,
+  /** @description button size */
+  size: _size,
+  /** @description button type */
+  type: _type,
+  /** @description button disabled */
+  disabled: _disabled,
+  /** @description whether adding space */
+  shouldAddSpace,
 })
 </script>

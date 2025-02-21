@@ -1,45 +1,11 @@
+---
+title: Dropdown
+lang: en-US
+---
+
 # Dropdown
 
 Toggleable menu for displaying lists of links and actions.
-
-<style lang="scss" scoped>
-
-.example-showcase {
-  .el-dropdown {
-    & + .el-dropdown {
-      margin-left: 15px;
-    }
-  }
-  .el-dropdown-link {
-    cursor: pointer;
-    color: var(--el-color-primary);
-  }
-  .el-icon-arrow-down {
-    font-size: 12px;
-  }
-}
-
-.block-col-2 {
-  margin: -24px;
-
-  .el-col {
-    padding: 30px 0;
-    text-align: center;
-    border-right: 1px solid var(--el-border-color-base);
-
-    &:last-child {
-      border-right: 0;
-    }
-  }
-}
-
-.example-showcase .demonstration {
-  display: block;
-  color: var(--el-text-color-secondary);
-  font-size: 14px;
-  margin-bottom: 20px;
-}
-</style>
 
 ## Basic usage
 
@@ -51,11 +17,21 @@ dropdown/basic-usage
 
 :::
 
+## Placement
+
+Support 6 placements.
+
+:::demo Set `placement` property to make dropdown appear in different locations.
+
+dropdown/placements
+
+:::
+
 ## Triggering element
 
 Use the button to trigger the dropdown list.
 
-:::demo Use `split-button` to split the triggering element into a button group with the left button being a normal button and right one the actual triggering target. If you wanna insert a separator line between item three and item four, just add a class `divider` to item four.
+:::demo Use `split-button` to split the triggering element into a button group with the left button being a normal button and right one the actual triggering target. If you wanna insert a separator line between item three and item four, just add the `divided` attribute to item four.
 
 dropdown/triggering-element
 
@@ -91,58 +67,94 @@ dropdown/command-event
 
 :::
 
+## Dropdown methods
+
+You can open or close the dropdown menu by manually use `handleOpen` or `handleClose`
+
+:::demo
+
+dropdown/dropdown-methods
+
+:::
+
 ## Sizes
 
 Besides default size, Dropdown component provides three additional sizes for you to choose among different scenarios.
 
-:::demo Use attribute `size` to set additional sizes with `medium`, `small` or `mini`.
+:::demo Use attribute `size` to set additional sizes with `large`, `default` or `small`.
 
 dropdown/sizes
 
 :::
 
-## Dropdown Attributes
+## Dropdown API
 
-| Attribute     | Description                                                                                          | Type            | Accepted Values                                      | Default |
-| ------------- | ---------------------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------- | ------- |
-| type          | menu button type, refer to `Button` Component, only works when `split-button` is true                | string          | —                                                    | —       |
-| size          | menu size, also works on the split button                                                            | string          | medium / small / mini                                | —       |
-| max-height    | the max height of menu                                                                               | string / number | —                                                    | —       |
-| split-button  | whether a button group is displayed                                                                  | boolean         | —                                                    | false   |
-| disabled      | Whether to disable                                                                                   | boolean         | —                                                    | false   |
-| placement     | placement of pop menu                                                                                | string          | top/top-start/top-end/bottom/bottom-start/bottom-end | bottom  |
-| trigger       | how to trigger                                                                                       | string          | hover/click/contextmenu                              | hover   |
-| hide-on-click | whether to hide menu after clicking menu-item                                                        | boolean         | —                                                    | true    |
-| show-timeout  | Delay time before show a dropdown (only works when trigger is `hover`)                               | number          | —                                                    | 250     |
-| hide-timeout  | Delay time before hide a dropdown (only works when trigger is `hover`)                               | number          | —                                                    | 150     |
-| tabindex      | [tabindex](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/tabindex) of Dropdown | number          | —                                                    | 0       |
+### Attributes
 
-## Dropdown Slots
+| Name                 | Description                                                                                                           | Type                                                                                                         | Default                                                                    |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| type                 | menu button type, refer to `Button` Component, only works when `split-button` is true                                 | ^[enum]`'' \| 'default' \| 'primary' \| 'success' \| 'warning' \| 'info' \| 'danger' \| 'text' (deprecated)` | ''                                                                         |
+| size                 | menu size, also works on the split button                                                                             | ^[enum]`'' \| 'large' \| 'default' \| 'small'`                                                               | ''                                                                         |
+| button-props         | props for the button component, refer to [Button Attributes](./button.html#button-attributes)                         | ^[object]                                                                                                    | —                                                                          |
+| max-height           | the max height of menu                                                                                                | ^[string] / ^[number]                                                                                        | ''                                                                         |
+| split-button         | whether a button group is displayed                                                                                   | ^[boolean]                                                                                                   | false                                                                      |
+| disabled             | whether to disable                                                                                                    | ^[boolean]                                                                                                   | false                                                                      |
+| placement            | placement of pop menu                                                                                                 | ^[enum]`'top' \| 'top-start' \| 'top-end' \| 'bottom' \| 'bottom-start' \| 'bottom-end'`                     | bottom                                                                     |
+| trigger              | how to trigger                                                                                                        | ^[enum]`'hover' \| 'click' \| 'contextmenu'`                                                                 | hover                                                                      |
+| triggerKeys ^(2.9.1) | specify whick keys on the keyboard can trigger when pressed                                                           | ^[array]`string[]`                                                                                           | `['Enter', 'Space', 'ArrowDown', 'NumpadEnter']`                           |
+| hide-on-click        | whether to hide menu after clicking menu-item                                                                         | ^[boolean]                                                                                                   | true                                                                       |
+| show-timeout         | delay time before show a dropdown (only works when trigger is `hover`)                                                | ^[number]                                                                                                    | 150                                                                        |
+| hide-timeout         | delay time before hide a dropdown (only works when trigger is `hover`)                                                | ^[number]                                                                                                    | 150                                                                        |
+| role                 | the ARIA role attribute for the dropdown menu. Depending on the use case, you may want to change this to 'navigation' | ^[string]                                                                                                    | menu                                                                       |
+| tabindex             | [tabindex](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/tabindex) of Dropdown                  | ^[number] / ^[string]                                                                                        | 0                                                                          |
+| popper-class         | custom class name for Dropdown's dropdown                                                                             | ^[string]                                                                                                    | ''                                                                         |
+| popper-options       | [popper.js](https://popper.js.org/docs/v2/) parameters                                                                | ^[object]                                                                                                    | `{modifiers: [{name: 'computeStyles',options: {gpuAcceleration: false}}]}` |
+| teleported ^(2.2.20) | whether the dropdown popup is teleported to the body                                                                  | ^[boolean]                                                                                                   | true                                                                       |
+| persistent ^(2.9.5)  | when dropdown inactive and `persistent` is `false` , dropdown menu will be destroyed                                     | ^[boolean]                                                                                                   | true                                                                       |
 
-| Name     | Description                                                                                                                                   |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| —        | content of Dropdown. Notice: Must be a valid html dom element (ex. `<span>, <button> etc.`) or `el-component`, to attach the trigger listener |
-| dropdown | content of the Dropdown Menu, usually a `<el-dropdown-menu>` element                                                                          |
+### Slots
 
-## Dropdown Events
+| Name     | Description                                                                                                                                   | Subtags       |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| default  | content of Dropdown. Notice: Must be a valid html dom element (ex. `<span>, <button> etc.`) or `el-component`, to attach the trigger listener | —             |
+| dropdown | content of the Dropdown Menu, usually a `<el-dropdown-menu>` element                                                                          | Dropdown-Menu |
 
-| Event Name     | Description                                                       | Parameters                                    |
-| -------------- | ----------------------------------------------------------------- | --------------------------------------------- |
-| click          | if `split-button` is `true`, triggers when left button is clicked | —                                             |
-| command        | triggers when a dropdown item is clicked                          | the command dispatched from the dropdown item |
-| visible-change | triggers when the dropdown appears/disappears                     | true when it appears, and false otherwise     |
+### Events
 
-## Dropdown-Menu Slots
+| Name           | Description                                                                                               | Type                                  |
+| -------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| click          | if `split-button` is `true`, triggers when left button is clicked                                         | ^[Function]`(e: MouseEvent) => void`  |
+| command        | triggers when a dropdown item is clicked, the parameters is the command dispatched from the dropdown item | ^[Function]`(...args: any[]) => void` |
+| visible-change | triggers when the dropdown appears/disappears, the param is true when it appears, and false otherwise     | ^[Function]`(val: boolean) => void`   |
 
-| Name | Description              |
-| ---- | ------------------------ |
-| —    | content of Dropdown Menu |
+### Exposes
 
-## Dropdown-Item Attributes
+| Method      | Description             | Type                    |
+| ----------- | ----------------------- | ----------------------- |
+| handleOpen  | open the dropdown menu  | ^[Function]`() => void` |
+| handleClose | close the dropdown menu | ^[Function]`() => void` |
 
-| Attribute | Description                                                 | Type                 | Accepted Values | Default |
-| --------- | ----------------------------------------------------------- | -------------------- | --------------- | ------- |
-| command   | a command to be dispatched to Dropdown's `command` callback | string/number/object | —               | —       |
-| disabled  | whether the item is disabled                                | boolean              | —               | false   |
-| divided   | whether a divider is displayed                              | boolean              | —               | false   |
-| icon      | icon class name                                             | string               | —               | —       |
+## Dropdown-Menu API
+
+### Slots
+
+| Name    | Description              | Subtags       |
+| ------- | ------------------------ | ------------- |
+| default | content of Dropdown Menu | Dropdown-Item |
+
+## Dropdown-Item API
+
+### Attributes
+
+| Name     | Description                                                 | Type                              | Default |
+| -------- | ----------------------------------------------------------- | --------------------------------- | ------- |
+| command  | a command to be dispatched to Dropdown's `command` callback | ^[string] / ^[number] / ^[object] | —       |
+| disabled | whether the item is disabled                                | ^[boolean]                        | false   |
+| divided  | whether a divider is displayed                              | ^[boolean]                        | false   |
+| icon     | custom icon                                                 | ^[string] / ^[Component]          | —       |
+
+### Slots
+
+| Name    | Description                |
+| ------- | -------------------------- |
+| default | customize of Dropdown Item |

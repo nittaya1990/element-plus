@@ -1,14 +1,21 @@
-import { buildProp, definePropType, mutable } from '@element-plus/utils/props'
+import {
+  buildProps,
+  definePropType,
+  iconPropType,
+  isBoolean,
+  mutable,
+} from '@element-plus/utils'
+import type { CheckboxValueType } from '@element-plus/components/checkbox'
 import type { InjectionKey } from 'vue'
-import type { TreeNodeData } from '../../tree/src/tree.type'
+import type { TreeNodeData } from '@element-plus/components/tree/src/tree.type'
 import type {
-  TreeNode,
-  TreeKey,
-  TreeData,
-  TreeOptionProps,
-  FilterMethod,
   CheckedInfo,
+  FilterMethod,
   TreeContext,
+  TreeData,
+  TreeKey,
+  TreeNode,
+  TreeOptionProps,
 } from './types'
 
 // constants
@@ -25,6 +32,7 @@ export enum TreeOptionsEnum {
   LABEL = 'label',
   CHILDREN = 'children',
   DISABLED = 'disabled',
+  CLASS = '',
 }
 
 export const enum SetOperationEnum {
@@ -32,20 +40,25 @@ export const enum SetOperationEnum {
   DELETE = 'delete',
 }
 
+const itemSize = {
+  type: Number,
+  default: 26,
+}
+
 // props
-export const treeProps = {
-  data: buildProp({
+export const treeProps = buildProps({
+  data: {
     type: definePropType<TreeData>(Array),
     default: () => mutable([] as const),
-  } as const),
-  emptyText: buildProp({
+  },
+  emptyText: {
     type: String,
-  }),
-  height: buildProp({
+  },
+  height: {
     type: Number,
     default: 200,
-  }),
-  props: buildProp({
+  },
+  props: {
     type: definePropType<TreeOptionProps>(Object),
     default: () =>
       mutable({
@@ -53,107 +66,111 @@ export const treeProps = {
         label: TreeOptionsEnum.LABEL,
         disabled: TreeOptionsEnum.DISABLED,
         value: TreeOptionsEnum.KEY,
+        class: TreeOptionsEnum.CLASS,
       } as const),
-  } as const),
-  highlightCurrent: buildProp({
+  },
+  highlightCurrent: {
     type: Boolean,
     default: false,
-  }),
-  showCheckbox: buildProp({
+  },
+  showCheckbox: {
     type: Boolean,
     default: false,
-  }),
-  defaultCheckedKeys: buildProp({
+  },
+  defaultCheckedKeys: {
     type: definePropType<TreeKey[]>(Array),
     default: () => mutable([] as const),
-  } as const),
+  },
   // Whether checked state of a node not affects its father and
   // child nodes when show-checkbox is true
-  checkStrictly: buildProp({
+  checkStrictly: {
     type: Boolean,
     default: false,
-  }),
-  defaultExpandedKeys: buildProp({
+  },
+  defaultExpandedKeys: {
     type: definePropType<TreeKey[]>(Array),
     default: () => mutable([] as const),
-  } as const),
-  indent: buildProp({
+  },
+  indent: {
     type: Number,
     default: 16,
-  }),
-  icon: buildProp({
-    type: String,
-  }),
-  expandOnClickNode: buildProp({
+  },
+  itemSize,
+  icon: {
+    type: iconPropType,
+  },
+  expandOnClickNode: {
     type: Boolean,
     default: true,
-  }),
-  checkOnClickNode: buildProp({
+  },
+  checkOnClickNode: {
     type: Boolean,
     default: false,
-  }),
-  currentNodeKey: buildProp({
+  },
+  currentNodeKey: {
     type: definePropType<TreeKey>([String, Number]),
-  } as const),
+  },
   // TODO need to optimization
-  accordion: buildProp({
+  accordion: {
     type: Boolean,
     default: false,
-  }),
-  filterMethod: buildProp({
+  },
+  filterMethod: {
     type: definePropType<FilterMethod>(Function),
-  } as const),
+  },
   // Performance mode will increase memory usage, but scrolling will be smoother
-  perfMode: buildProp({
+  perfMode: {
     type: Boolean,
     default: true,
-  }),
-} as const
+  },
+} as const)
 
-export const treeNodeProps = {
-  node: buildProp({
+export const treeNodeProps = buildProps({
+  node: {
     type: definePropType<TreeNode>(Object),
     default: () => mutable(EMPTY_NODE),
-  } as const),
-  expanded: buildProp({
+  },
+  expanded: {
     type: Boolean,
     default: false,
-  }),
-  checked: buildProp({
+  },
+  checked: {
     type: Boolean,
     default: false,
-  }),
-  indeterminate: buildProp({
+  },
+  indeterminate: {
     type: Boolean,
     default: false,
-  }),
-  showCheckbox: buildProp({
+  },
+  showCheckbox: {
     type: Boolean,
     default: false,
-  }),
-  disabled: buildProp({
+  },
+  disabled: {
     type: Boolean,
     default: false,
-  }),
-  current: buildProp({
+  },
+  current: {
     type: Boolean,
     default: false,
-  }),
-  hiddenExpandIcon: buildProp({
+  },
+  hiddenExpandIcon: {
     type: Boolean,
     default: false,
-  }),
-} as const
+  },
+  itemSize,
+} as const)
 
-export const treeNodeContentProps = {
-  node: buildProp({
+export const treeNodeContentProps = buildProps({
+  node: {
     type: definePropType<TreeNode>(Object),
     required: true,
-  } as const),
-} as const
+  },
+} as const)
 
 // emits
 export const NODE_CLICK = 'node-click'
+export const NODE_DROP = 'node-drop'
 export const NODE_EXPAND = 'node-expand'
 export const NODE_COLLAPSE = 'node-collapse'
 export const CURRENT_CHANGE = 'current-change'
@@ -162,21 +179,25 @@ export const NODE_CHECK_CHANGE = 'check-change'
 export const NODE_CONTEXTMENU = 'node-contextmenu'
 
 export const treeEmits = {
-  [NODE_CLICK]: (data: TreeNodeData, node: TreeNode) => data && node,
+  [NODE_CLICK]: (data: TreeNodeData, node: TreeNode, e: MouseEvent) =>
+    data && node && e,
+  [NODE_DROP]: (data: TreeNodeData, node: TreeNode, e: DragEvent) =>
+    data && node && e,
   [NODE_EXPAND]: (data: TreeNodeData, node: TreeNode) => data && node,
   [NODE_COLLAPSE]: (data: TreeNodeData, node: TreeNode) => data && node,
   [CURRENT_CHANGE]: (data: TreeNodeData, node: TreeNode) => data && node,
   [NODE_CHECK]: (data: TreeNodeData, checkedInfo: CheckedInfo) =>
     data && checkedInfo,
   [NODE_CHECK_CHANGE]: (data: TreeNodeData, checked: boolean) =>
-    data && typeof checked === 'boolean',
-  [NODE_CONTEXTMENU]: (event: Event, data: TreeNodeData, node: TreeNode) =>
-    event && data && node,
+    data && isBoolean(checked),
+  [NODE_CONTEXTMENU]: (evt: Event, data: TreeNodeData, node: TreeNode) =>
+    evt && data && node,
 }
 
 export const treeNodeEmits = {
-  click: (node: TreeNode) => !!node,
+  click: (node: TreeNode, e: MouseEvent) => !!(node && e),
+  drop: (node: TreeNode, e: DragEvent) => !!(node && e),
   toggle: (node: TreeNode) => !!node,
-  check: (node: TreeNode, checked: boolean) =>
-    node && typeof checked === 'boolean',
+  check: (node: TreeNode, checked: CheckboxValueType) =>
+    node && isBoolean(checked),
 }

@@ -1,5 +1,4 @@
-import { rAF, cAF } from '@element-plus/utils/raf'
-import { isFF } from '../utils'
+import { cAF, isFirefox, rAF } from '@element-plus/utils'
 import { HORIZONTAL, VERTICAL } from '../defaults'
 
 import type { ComputedRef } from 'vue'
@@ -8,7 +7,7 @@ import type { LayoutDirection } from '../types'
 const LayoutKeys = {
   [HORIZONTAL]: 'deltaX',
   [VERTICAL]: 'deltaY',
-}
+} as const
 
 interface ListWheelState {
   atStartEdge: ComputedRef<boolean> // exclusive to reachEnd
@@ -50,7 +49,7 @@ const useWheel = (
 
     offset += newOffset
 
-    if (!isFF) {
+    if (!isFirefox()) {
       e.preventDefault()
     }
 

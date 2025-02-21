@@ -1,8 +1,9 @@
 {
-  "cSpell.words": ["Element Plus", "element-plus"],
+  "cSpell.words": ["Element Plus", "element-plus", "vnode"],
   "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "npm.packageManager": "pnpm",
   "eslint.probe": [
@@ -12,7 +13,9 @@
     "typescriptreact",
     "html",
     "vue",
-    "markdown"
+    "markdown",
+    "json",
+    "jsonc"
   ],
   "eslint.validate": [
     "javascript",
@@ -21,6 +24,24 @@
     "typescriptreact",
     "html",
     "vue",
-    "markdown"
-  ]
+    "markdown",
+    "json",
+    "jsonc"
+  ],
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "vite.devCommand": "pnpm run dev -- --",
+  "i18n-ally.localesPaths": "packages/locale/lang",
+  "i18n-ally.enabledParsers": ["ts"],
+  "i18n-ally.enabledFrameworks": ["vue", "vue-sfc"],
+  "i18n-ally.keystyle": "nested",
+  "iconify.includes": ["ep"],
+  "unocss.root": "./docs",
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "package.json": "pnpm-lock.yaml, pnpm-workspace.yaml",
+    "tsconfig.json": "tsconfig.*.json",
+    "vitest.config.mts": "vitest.setup.ts, vitest.workspace.ts"
+  }
 }

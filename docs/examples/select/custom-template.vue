@@ -1,5 +1,5 @@
 <template>
-  <el-select v-model="value" placeholder="Select">
+  <el-select v-model="value" placeholder="Select" style="width: 240px">
     <el-option
       v-for="item in cities"
       :key="item.value"
@@ -13,46 +13,41 @@
           color: var(--el-text-color-secondary);
           font-size: 13px;
         "
-        >{{ item.value }}</span
       >
+        {{ item.value }}
+      </span>
     </el-option>
   </el-select>
 </template>
 
-<script lang="ts">
-import { ref, defineComponent } from 'vue'
+<script lang="ts" setup>
+import { ref } from 'vue'
 
-export default defineComponent({
-  setup() {
-    return {
-      cities: ref([
-        {
-          value: 'Beijing',
-          label: 'Beijing',
-        },
-        {
-          value: 'Shanghai',
-          label: 'Shanghai',
-        },
-        {
-          value: 'Nanjing',
-          label: 'Nanjing',
-        },
-        {
-          value: 'Chengdu',
-          label: 'Chengdu',
-        },
-        {
-          value: 'Shenzhen',
-          label: 'Shenzhen',
-        },
-        {
-          value: 'Guangzhou',
-          label: 'Guangzhou',
-        },
-      ]),
-      value: ref(''),
-    }
+const value = ref('')
+const cities = [
+  {
+    value: 'Beijing',
+    label: 'Beijing',
   },
-})
+  {
+    value: 'Shanghai',
+    label: 'Shanghai',
+  },
+  {
+    value: 'Nanjing',
+    label: 'Nanjing',
+  },
+  {
+    value: 'Chengdu',
+    label: 'Chengdu',
+  },
+  {
+    value: 'Shenzhen',
+    label: 'Shenzhen',
+  },
+  {
+    value: 'Guangzhou',
+    label: 'Guangzhou',
+  },
+]
 </script>

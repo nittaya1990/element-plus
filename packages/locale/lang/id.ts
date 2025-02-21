@@ -1,6 +1,9 @@
 export default {
   name: 'id',
   el: {
+    breadcrumb: {
+      label: 'Breadcrumb', // to be translated
+    },
     colorpicker: {
       confirm: 'Pilih',
       clear: 'Kosongkan',
@@ -34,7 +37,7 @@ export default {
       month10: 'Oktober',
       month11: 'November',
       month12: 'Desember',
-      // week: 'minggu',
+      week: 'Minggu',
       weeks: {
         sun: 'Min',
         mon: 'Sen',
@@ -65,6 +68,9 @@ export default {
       noData: 'Tidak ada data',
       placeholder: 'Pilih',
     },
+    mention: {
+      loading: 'Memuat',
+    },
     cascader: {
       noMatch: 'Tidak ada data yg cocok',
       loading: 'Memuat',
@@ -73,9 +79,17 @@ export default {
     },
     pagination: {
       goto: 'Pergi ke',
-      pagesize: '/laman',
+      pagesize: '/halaman',
       total: 'Total {total}',
       pageClassifier: '',
+      page: 'Page', // to be translated
+      prev: 'Go to previous page', // to be translated
+      next: 'Go to next page', // to be translated
+      currentPage: 'page {pager}', // to be translated
+      prevPages: 'Previous {pager} pages', // to be translated
+      nextPages: 'Next {pager} pages', // to be translated
+      deprecationWarning:
+        'Penggunaan yang tidak akan digunakan lagi terdeteksi, silakan lihat dokumentasi el-pagination untuk lebih jelasnya',
     },
     messagebox: {
       title: 'Pesan',
@@ -94,7 +108,7 @@ export default {
       confirmFilter: 'Konfirmasi',
       resetFilter: 'Atur ulang',
       clearFilter: 'Semua',
-      sumText: 'Jml',
+      sumText: 'Jumlah',
     },
     tree: {
       emptyText: 'Tidak ada data',
@@ -102,9 +116,9 @@ export default {
     transfer: {
       noMatch: 'Tidak ada data yg cocok',
       noData: 'Tidak ada data',
-      titles: ['Senarai 1', 'Senarai 2'],
+      titles: ['Daftar 1', 'Daftar 2'],
       filterPlaceholder: 'Masukan kata kunci',
-      noCheckedFormat: '{total} butir',
+      noCheckedFormat: '{total} item',
       hasCheckedFormat: '{checked}/{total} terpilih',
     },
     image: {
@@ -116,6 +130,11 @@ export default {
     popconfirm: {
       confirmButtonText: 'Ya',
       cancelButtonText: 'Tidak',
+    },
+    carousel: {
+      leftArrow: 'Carousel arrow left', // to be translated
+      rightArrow: 'Carousel arrow right', // to be translated
+      indicator: 'Carousel switch to index {index}', // to be translated
     },
   },
 }

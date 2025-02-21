@@ -3,50 +3,37 @@
     type="button"
     class="btn-next"
     :disabled="internalDisabled"
+    :aria-label="nextText || t('el.pagination.next')"
     :aria-disabled="internalDisabled"
     @click="$emit('click', $event)"
   >
     <span v-if="nextText">{{ nextText }}</span>
-    <i v-else class="el-icon el-icon-arrow-right"></i>
+    <el-icon v-else>
+      <component :is="nextIcon" />
+    </el-icon>
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
+import { useLocale } from '@element-plus/hooks'
+import { ElIcon } from '@element-plus/components/icon'
+import { paginationNextProps } from './next'
 
-const paginationNextProps = {
-  disabled: Boolean,
-  currentPage: {
-    type: Number,
-    default: 1,
-  },
-  pageCount: {
-    type: Number,
-    default: 50,
-  },
-  nextText: {
-    type: String,
-    default: '',
-  },
-} as const
-
-export default defineComponent({
+defineOptions({
   name: 'ElPaginationNext',
-
-  props: paginationNextProps,
-  emits: ['click'],
-
-  setup(props) {
-    const internalDisabled = computed(
-      () =>
-        props.disabled ||
-        props.currentPage === props.pageCount ||
-        props.pageCount === 0
-    )
-
-    return {
-      internalDisabled,
-    }
-  },
 })
+
+const props = defineProps(paginationNextProps)
+
+defineEmits(['click'])
+
+const { t } = useLocale()
+
+const internalDisabled = computed(
+  () =>
+    props.disabled ||
+    props.currentPage === props.pageCount ||
+    props.pageCount === 0
+)
 </script>

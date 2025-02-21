@@ -1,16 +1,12 @@
 import { computed } from 'vue'
-import { darken } from '@element-plus/utils/color'
+import { TinyColor } from '@ctrl/tinycolor'
 
 import type { MenuProps } from './menu'
 
 export default function useMenuColor(props: MenuProps) {
   const menuBarColor = computed(() => {
     const color = props.backgroundColor
-    if (!color) {
-      return ''
-    } else {
-      return darken(color)
-    }
+    return color ? new TinyColor(color).shade(20).toString() : ''
   })
   return menuBarColor
 }

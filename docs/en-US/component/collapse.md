@@ -1,15 +1,11 @@
+---
+title: Collapse
+lang: en-US
+---
+
 # Collapse
 
 Use Collapse to store contents.
-
-<style lang="scss">
-.demo-collapse {
-  .el-collapse {
-    padding: 8px;
-    background: white;
-  }
-}
-</style>
 
 ## Basic usage
 
@@ -41,30 +37,52 @@ collapse/customization
 
 :::
 
-## Collapse Attributes
+## Custom icon ^(2.8.3)
 
-| Attribute             | Description                        | Type                                                 | Accepted Values | Default |
-| --------------------- | ---------------------------------- | ---------------------------------------------------- | --------------- | ------- |
-| model-value / v-model | currently active panel             | string (accordion mode) / array (non-accordion mode) | —               | —       |
-| accordion             | whether to activate accordion mode | boolean                                              | —               | false   |
+Besides using the `icon` attribute, you can customize icon of panel item with named slots, which makes adding custom content.
 
-## Collapse Events
+:::demo
 
-| Event Name | Description                        | Parameters                                                          |
-| ---------- | ---------------------------------- | ------------------------------------------------------------------- |
-| change     | triggers when active panels change | (activeNames: array (non-accordion mode) / string (accordion mode)) |
+collapse/custom-icon
 
-## Collapse Item Attributes
+:::
 
-| Attribute | Description                        | Type          | Accepted Values | Default |
-| --------- | ---------------------------------- | ------------- | --------------- | ------- |
-| name      | unique identification of the panel | string/number | —               | —       |
-| title     | title of the panel                 | string        | —               | —       |
-| disabled  | disable the collapse item          | boolean       | —               | —       |
+## Collapse API
 
-## Collapse Item Slot
+### Attributes
 
-| Name  | Description                    |
-| ----- | ------------------------------ |
-| —     | content of Collapse Item       |
-| title | content of Collapse Item title |
+| Name                  | Description                                                                             | Type                 | Default |
+| --------------------- | --------------------------------------------------------------------------------------- | -------------------- | ------- |
+| model-value / v-model | currently active panel, the type is `string` in accordion mode, otherwise it is `array` | ^[string] / ^[array] | []      |
+| accordion             | whether to activate accordion mode                                                      | ^[boolean]           | false   |
+
+### Events
+
+| Name   | Description                                                                                                   | Type                                                |
+| ------ | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| change | triggers when active panels change, the parameter type is `string` in accordion mode, otherwise it is `array` | ^[Function]`(activeNames: array \| string) => void` |
+
+### Slots
+
+| Name    | Description               | Subtags       |
+| ------- | ------------------------- | ------------- |
+| default | customize default content | Collapse Item |
+
+## Collapse Item API
+
+### Attributes
+
+| Name          | Description                        | Type                     | Default    |
+| ------------- | ---------------------------------- | ------------------------ | ---------- |
+| name          | unique identification of the panel | ^[string] / ^[number]    | —          |
+| title         | title of the panel                 | ^[string]                | ''         |
+| icon ^(2.8.3) | icon of the collapse item          | ^[string] / ^[Component] | ArrowRight |
+| disabled      | disable the collapse item          | ^[boolean]               | false      |
+
+### Slot
+
+| Name          | Description                    | Type                             |
+| ------------- | ------------------------------ | -------------------------------- |
+| default       | content of Collapse Item       | —                                |
+| title         | content of Collapse Item title | —                                |
+| icon ^(2.8.3) | content of Collapse Item icon  | ^[object]`{ isActive: boolean }` |

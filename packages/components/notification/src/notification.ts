@@ -1,6 +1,7 @@
-import { buildProp, definePropType } from '@element-plus/utils/props'
+import { buildProps, definePropType, iconPropType } from '@element-plus/utils'
 
-import type { VNode, ExtractPropTypes } from 'vue'
+import type { AppContext, ExtractPropTypes, VNode } from 'vue'
+import type Notification from './notification.vue'
 
 export const notificationTypes = [
   'success',
@@ -9,66 +10,105 @@ export const notificationTypes = [
   'error',
 ] as const
 
-export const notificationProps = {
+export const notificationProps = buildProps({
+  /**
+   * @description custom class name for Notification
+   */
   customClass: {
     type: String,
     default: '',
   },
-  dangerouslyUseHTMLString: {
-    type: Boolean,
-    default: false,
-  },
+  /**
+   * @description whether `message` is treated as HTML string
+   */
+  dangerouslyUseHTMLString: Boolean,
+  /**
+   * @description duration before close. It will not automatically close if set 0
+   */
   duration: {
     type: Number,
     default: 4500,
   },
-  iconClass: {
-    type: String,
-    default: '',
+  /**
+   * @description custom icon component. It will be overridden by `type`
+   */
+  icon: {
+    type: iconPropType,
   },
+  /**
+   * @description notification dom id
+   */
   id: {
     type: String,
     default: '',
   },
-  message: buildProp({
-    type: definePropType<string | VNode>([String, Object]),
+  /**
+   * @description description text
+   */
+  message: {
+    type: definePropType<string | VNode | (() => VNode)>([
+      String,
+      Object,
+      Function,
+    ]),
     default: '',
-  }),
+  },
+  /**
+   * @description offset from the top edge of the screen. Every Notification instance of the same moment should have the same offset
+   */
   offset: {
     type: Number,
     default: 0,
   },
-  onClick: buildProp({
+  /**
+   * @description callback function when notification clicked
+   */
+  onClick: {
     type: definePropType<() => void>(Function),
     default: () => undefined,
-  }),
-  onClose: buildProp({
+  },
+  /**
+   * @description callback function when closed
+   */
+  onClose: {
     type: definePropType<() => void>(Function),
     required: true,
-  }),
-  position: buildProp({
+  },
+  /**
+   * @description custom position
+   */
+  position: {
     type: String,
     values: ['top-right', 'top-left', 'bottom-right', 'bottom-left'],
     default: 'top-right',
-  } as const),
+  },
+  /**
+   * @description whether to show a close button
+   */
   showClose: {
     type: Boolean,
     default: true,
   },
+  /**
+   * @description title
+   */
   title: {
     type: String,
     default: '',
   },
-  type: buildProp({
+  /**
+   * @description notification type
+   */
+  type: {
     type: String,
     values: [...notificationTypes, ''],
     default: '',
-  } as const),
-  zIndex: {
-    type: Number,
-    default: 0,
   },
-} as const
+  /**
+   * @description initial zIndex
+   */
+  zIndex: Number,
+} as const)
 export type NotificationProps = ExtractPropTypes<typeof notificationProps>
 
 export const notificationEmits = {
@@ -76,7 +116,18 @@ export const notificationEmits = {
 }
 export type NotificationEmits = typeof notificationEmits
 
-export type NotificationOptions = Omit<NotificationProps, 'id'>
+export type NotificationInstance = InstanceType<typeof Notification>
+
+export type NotificationOptions = Omit<NotificationProps, 'id' | 'onClose'> & {
+  /**
+   * @description set the root element for the notification, default to `document.body`
+   */
+  appendTo?: HTMLElement | string
+  /**
+   * @description callback function when closed
+   */
+  onClose?(vm: VNode): void
+}
 export type NotificationOptionsTyped = Omit<NotificationOptions, 'type'>
 
 export interface NotificationHandle {
@@ -89,12 +140,18 @@ export type NotificationParamsTyped =
   | string
   | VNode
 
-export type NotifyFn = ((
-  options?: NotificationParams
-) => NotificationHandle) & { closeAll: () => void }
+export interface NotifyFn {
+  (
+    options?: NotificationParams,
+    appContext?: null | AppContext
+  ): NotificationHandle
+  closeAll(): void
+  _context: AppContext | null
+}
 
 export type NotifyTypedFn = (
-  options?: NotificationParamsTyped
+  options?: NotificationParamsTyped,
+  appContext?: null | AppContext
 ) => NotificationHandle
 
 export interface Notify extends NotifyFn {

@@ -1,19 +1,14 @@
 <template>
   <el-input
     v-model="textarea"
+    style="width: 240px"
     :rows="2"
     type="textarea"
     placeholder="Please input"
   />
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
-export default defineComponent({
-  setup() {
-    return {
-      textarea: ref(''),
-    }
-  },
-})
+<script lang="ts" setup>
+import { ref } from 'vue'
+const textarea = ref('')
 </script>

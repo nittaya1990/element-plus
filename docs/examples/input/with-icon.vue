@@ -1,62 +1,43 @@
 <template>
-  <div class="demo-input-suffix">
-    <span class="demo-input-label">Using attributes</span>
-    <el-row :gutter="20">
-      <el-input
-        v-model="input1"
-        placeholder="Pick a date"
-        suffix-icon="el-icon-date"
-      />
-    </el-row>
-    <el-row :gutter="20">
-      <el-input
-        v-model="input2"
-        placeholder="Type something"
-        prefix-icon="el-icon-search"
-      />
-    </el-row>
+  <div class="flex gap-4 mb-4">
+    <span>Using attributes</span>
+    <el-input
+      v-model="input1"
+      style="width: 240px"
+      placeholder="Pick a date"
+      :suffix-icon="Calendar"
+    />
+    <el-input
+      v-model="input2"
+      style="width: 240px"
+      placeholder="Type something"
+      :prefix-icon="Search"
+    />
   </div>
-  <div class="demo-input-suffix">
-    <span class="demo-input-label">Using slots</span>
-    <el-row :gutter="20">
-      <el-input v-model="input3" placeholder="Pick a date">
-        <template #suffix>
-          <i class="el-input__icon el-icon-date"></i>
-        </template>
-      </el-input>
-    </el-row>
-
-    <el-row :gutter="20">
-      <el-input v-model="input4" placeholder="Type something">
-        <template #prefix>
-          <i class="el-input__icon el-icon-search"></i>
-        </template>
-      </el-input>
-    </el-row>
+  <div class="flex gap-4">
+    <span>Using slots</span>
+    <el-input v-model="input3" style="width: 240px" placeholder="Pick a date">
+      <template #suffix>
+        <el-icon class="el-input__icon"><calendar /></el-icon>
+      </template>
+    </el-input>
+    <el-input
+      v-model="input4"
+      style="width: 240px"
+      placeholder="Type something"
+    >
+      <template #prefix>
+        <el-icon class="el-input__icon"><search /></el-icon>
+      </template>
+    </el-input>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
-export default defineComponent({
-  setup() {
-    return {
-      input1: ref(''),
-      input2: ref(''),
-      input3: ref(''),
-      input4: ref(''),
-    }
-  },
-})
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Calendar, Search } from '@element-plus/icons-vue'
+const input1 = ref('')
+const input2 = ref('')
+const input3 = ref('')
+const input4 = ref('')
 </script>
-
-<style>
-.demo-input-label {
-  display: inline-block;
-  width: 130px;
-}
-
-.demo-input-suffix {
-  margin-bottom: 16px;
-}
-</style>

@@ -1,3 +1,8 @@
+---
+title: Card
+lang: en-US
+---
+
 # Card
 
 Integrate information in a card container.
@@ -6,7 +11,7 @@ Integrate information in a card container.
 
 Card includes title, content and operations.
 
-:::demo Card is made up of `header` and `body`. `header` is optional, and its content distribution depends on a named slot.
+:::demo Card is made up of `header`, `body` and `footer`. `header` and `footer` are optional, and its content distribution depends on a named slot.
 
 card/basic
 
@@ -26,7 +31,7 @@ card/simple
 
 Display richer content by adding some configs.
 
-:::demo The `body-style` attribute defines CSS style of custom `body`. This example also uses `el-col` for layout.
+:::demo The `body-style` attribute defines CSS style of custom `body`.
 
 card/with-images
 
@@ -42,10 +47,22 @@ card/shadow
 
 :::
 
-## Attributes
+## API
 
-| Attribute  | Description                                                   | Type   | Accepted Values        | Default             |
-| ---------- | ------------------------------------------------------------- | ------ | ---------------------- | ------------------- |
-| header     | title of the card. Also accepts a DOM passed by `slot#header` | string | —                      | —                   |
-| body-style | CSS style of body                                             | object | —                      | { padding: '20px' } |
-| shadow     | when to show card shadows                                     | string | always / hover / never | always              |
+### Attributes
+
+| Name                 | Description                                                    | Type                              | Default |
+| -------------------- | -------------------------------------------------------------- | --------------------------------- | ------- |
+| header               | title of the card. Also accepts a DOM passed by `slot#header`  | ^[string]                         | —       |
+| footer ^(2.4.3)      | footer of the card. Also accepts a DOM passed by `slot#footer` | ^[string]                         | —       |
+| body-style           | CSS style of card body                                         | ^[object]`CSSProperties`          | —       |
+| body-class ^(2.3.10) | custom class name of card body                                 | ^[string]                         | —       |
+| shadow               | when to show card shadows                                      | ^[enum]`always \| never \| hover` | always  |
+
+### Slots
+
+| Name    | Description                |
+| ------- | -------------------------- |
+| default | customize default content  |
+| header  | content of the Card header |
+| footer  | content of the Card footer |

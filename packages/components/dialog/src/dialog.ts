@@ -1,81 +1,126 @@
-import { isValidWidthUnit } from '@element-plus/utils/validators'
-import { buildProp, definePropType } from '@element-plus/utils/props'
-import { UPDATE_MODEL_EVENT } from '@element-plus/utils/constants'
+import { buildProps, definePropType, isBoolean } from '@element-plus/utils'
+import { UPDATE_MODEL_EVENT } from '@element-plus/constants'
+import { dialogContentProps } from './dialog-content'
 
 import type { ExtractPropTypes } from 'vue'
+import type Dialog from './dialog.vue'
 
-export const dialogProps = {
-  appendToBody: {
-    type: Boolean,
-    default: false,
+type DoneFn = (cancel?: boolean) => void
+export type DialogBeforeCloseFn = (done: DoneFn) => void
+
+export const dialogProps = buildProps({
+  ...dialogContentProps,
+  /**
+   * @description whether to append Dialog itself to body. A nested Dialog should have this attribute set to `true`
+   */
+  appendToBody: Boolean,
+  /**
+   * @description which element the Dialog appends to
+   */
+  appendTo: {
+    type: definePropType<string | HTMLElement>([String, Object]),
+    default: 'body',
   },
-  beforeClose: buildProp({
-    type: definePropType<(...args: any[]) => void>(Function),
-  }),
-  destroyOnClose: {
-    type: Boolean,
-    default: false,
+  /**
+   * @description callback before Dialog closes, and it will prevent Dialog from closing, use done to close the dialog
+   */
+  beforeClose: {
+    type: definePropType<DialogBeforeCloseFn>(Function),
   },
-  center: {
-    type: Boolean,
-    default: false,
-  },
-  customClass: {
-    type: String,
-    default: '',
-  },
+  /**
+   * @description destroy elements in Dialog when closed
+   */
+  destroyOnClose: Boolean,
+  /**
+   * @description whether the Dialog can be closed by clicking the mask
+   */
   closeOnClickModal: {
     type: Boolean,
     default: true,
   },
+  /**
+   * @description whether the Dialog can be closed by pressing ESC
+   */
   closeOnPressEscape: {
     type: Boolean,
     default: true,
   },
-  fullscreen: {
-    type: Boolean,
-    default: false,
-  },
+  /**
+   * @description whether scroll of body is disabled while Dialog is displayed
+   */
   lockScroll: {
     type: Boolean,
     default: true,
   },
+  /**
+   * @description whether a mask is displayed
+   */
   modal: {
     type: Boolean,
     default: true,
   },
-  showClose: {
-    type: Boolean,
-    default: true,
-  },
-  title: {
-    type: String,
-    default: '',
-  },
+  /**
+   * @description the Time(milliseconds) before open
+   */
   openDelay: {
     type: Number,
     default: 0,
   },
+  /**
+   * @description the Time(milliseconds) before close
+   */
   closeDelay: {
     type: Number,
     default: 0,
   },
+  /**
+   * @description value for `margin-top` of Dialog CSS, default is 15vh
+   */
   top: {
     type: String,
   },
-  modelValue: {
-    type: Boolean,
-    required: true,
-  },
+  /**
+   * @description visibility of Dialog
+   */
+  modelValue: Boolean,
+  /**
+   * @description custom class names for mask
+   */
   modalClass: String,
-  width: buildProp({
+  /**
+   * @description custom class names for header wrapper
+   */
+  headerClass: String,
+  /**
+   * @description custom class names for body wrapper
+   */
+  bodyClass: String,
+  /**
+   * @description custom class names for footer wrapper
+   */
+  footerClass: String,
+  /**
+   * @description width of Dialog, default is 50%
+   */
+  width: {
     type: [String, Number],
-    validator: isValidWidthUnit,
-  }),
+  },
+  /**
+   * @description same as z-index in native CSS, z-order of dialog
+   */
   zIndex: {
     type: Number,
   },
-} as const
+  trapFocus: Boolean,
+  /**
+   * @description header's aria-level attribute
+   */
+  headerAriaLevel: {
+    type: String,
+    default: '2',
+  },
+} as const)
+
 export type DialogProps = ExtractPropTypes<typeof dialogProps>
 
 export const dialogEmits = {
@@ -83,6 +128,9 @@ export const dialogEmits = {
   opened: () => true,
   close: () => true,
   closed: () => true,
-  [UPDATE_MODEL_EVENT]: (value: boolean) => typeof value === 'boolean',
+  [UPDATE_MODEL_EVENT]: (value: boolean) => isBoolean(value),
+  openAutoFocus: () => true,
+  closeAutoFocus: () => true,
 }
 export type DialogEmits = typeof dialogEmits
+export type DialogInstance = InstanceType<typeof Dialog>

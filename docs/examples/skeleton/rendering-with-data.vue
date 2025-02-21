@@ -1,22 +1,31 @@
 <template>
-  <el-space direction="vertical" alignment="flex-start">
-    <el-button @click="setLoading">Click me to reload</el-button>
-    <el-skeleton style="width: 240px" :loading="loading" animated :count="3">
+  <el-space style="width: 100%" fill>
+    <div>
+      <el-button @click="setLoading">Click me to reload</el-button>
+    </div>
+    <el-skeleton
+      style="display: flex; gap: 8px"
+      :loading="loading"
+      animated
+      :count="3"
+    >
       <template #template>
-        <el-skeleton-item variant="image" style="width: 400px; height: 267px" />
-        <div style="padding: 14px">
-          <el-skeleton-item variant="h3" style="width: 50%" />
-          <div
-            style="
-              display: flex;
-              align-items: center;
-              justify-items: space-between;
-              margin-top: 16px;
-              height: 16px;
-            "
-          >
-            <el-skeleton-item variant="text" style="margin-right: 16px" />
-            <el-skeleton-item variant="text" style="width: 30%" />
+        <div style="flex: 1">
+          <el-skeleton-item variant="image" style="height: 240px" />
+          <div style="padding: 14px">
+            <el-skeleton-item variant="h3" style="width: 50%" />
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-items: space-between;
+                margin-top: 16px;
+                height: 16px;
+              "
+            >
+              <el-skeleton-item variant="text" style="margin-right: 16px" />
+              <el-skeleton-item variant="text" style="width: 30%" />
+            </div>
           </div>
         </div>
       </template>
@@ -26,12 +35,16 @@
           :key="item.name"
           :body-style="{ padding: '0px', marginBottom: '1px' }"
         >
-          <img :src="item.imgUrl" class="image multi-content" />
+          <img
+            :src="item.imgUrl"
+            class="image multi-content"
+            style="max-width: 100%"
+          />
           <div style="padding: 14px">
             <span>{{ item.name }}</span>
             <div class="bottom card-header">
-              <span class="time">{{ currentDate }}</span>
-              <el-button type="text" class="button">Operation button</el-button>
+              <div class="time">{{ currentDate }}</div>
+              <el-button text class="button">Operation button</el-button>
             </div>
           </div>
         </el-card>
@@ -40,43 +53,43 @@
   </el-space>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import dayjs from 'dayjs'
+<script lang="ts" setup>
+import { onMounted, ref } from 'vue'
 
-export default defineComponent({
-  data() {
-    return {
-      loading: true,
-      currentDate: dayjs().format('YYYY-MM-DD'),
-      lists: [],
-    }
-  },
-  mounted() {
-    this.loading = false
-    this.lists = [
-      {
-        imgUrl:
-          'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-        name: 'Deer',
-      },
-      {
-        imgUrl:
-          'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
-        name: 'Horse',
-      },
-      {
-        imgUrl:
-          'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
-        name: 'Mountain Lion',
-      },
-    ]
-  },
-  methods: {
-    setLoading() {
-      this.loading = true
-      setTimeout(() => (this.loading = false), 2000)
+interface ListItem {
+  imgUrl: string
+  name: string
+}
+
+const loading = ref(true)
+const lists = ref<ListItem[]>([])
+const currentDate = new Date().toDateString()
+
+const setLoading = () => {
+  loading.value = true
+  setTimeout(() => {
+    loading.value = false
+  }, 2000)
+}
+
+onMounted(() => {
+  loading.value = false
+  lists.value = [
+    {
+      imgUrl:
+        'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
+      name: 'Deer',
     },
-  },
+    {
+      imgUrl:
+        'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
+      name: 'Horse',
+    },
+    {
+      imgUrl:
+        'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
+      name: 'Mountain Lion',
+    },
+  ]
 })
 </script>

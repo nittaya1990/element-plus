@@ -1,3 +1,8 @@
+---
+title: Input
+lang: en-US
+---
+
 # Input Number
 
 Input numerical values with a customizable range.
@@ -7,6 +12,12 @@ Input numerical values with a customizable range.
 :::demo Bind a variable to `v-model` in `<el-input-number>` element and you are set.
 
 input-number/basic
+
+:::
+
+:::tip
+
+When inputting invalid string to the input box, input value will emit `NaN` to the upper layer as result of error
 
 :::
 
@@ -52,7 +63,7 @@ The value of `precision` must be a non negative integer and should not be less t
 
 ## Size
 
-Use attribute `size` to set additional sizes with `medium`, `small` or `mini`.
+Use attribute `size` to set additional sizes with `large` or `small`.
 
 :::demo
 
@@ -68,35 +79,67 @@ input-number/controlled
 
 :::
 
-## Attributes
+## Custom Icon ^(2.6.3)
 
-| Attribute             | Description                                      | Type               | Accepted Values         | Default     |
-| --------------------- | ------------------------------------------------ | ------------------ | ----------------------- | ----------- |
-| model-value / v-model | binding value                                    | number / undefined | —                       | 0           |
-| min                   | the minimum allowed value                        | number             | —                       | `-Infinity` |
-| max                   | the maximum allowed value                        | number             | —                       | `Infinity`  |
-| step                  | incremental step                                 | number             | —                       | 1           |
-| step-strictly         | whether input value can only be multiple of step | boolean            | —                       | false       |
-| precision             | precision of input value                         | number             | —                       | —           |
-| size                  | size of the component                            | string             | large/medium/small/mini | large       |
-| disabled              | whether the component is disabled                | boolean            | —                       | false       |
-| controls              | whether to enable the control buttons            | boolean            | —                       | true        |
-| controls-position     | position of the control buttons                  | string             | right                   | -           |
-| name                  | same as `name` in native input                   | string             | —                       | —           |
-| label                 | label text                                       | string             | —                       | —           |
-| placeholder           | placeholder in input                             | string             | -                       | -           |
+:::demo Use `decrease-icon` and `increase-icon` to set custom icons.
 
-## Events
+input-number/custom
 
-| Event Name | Description                     | Parameters             |
-| ---------- | ------------------------------- | ---------------------- |
-| change     | triggers when the value changes | currentValue, oldValue |
-| blur       | triggers when Input blurs       | (event: Event)         |
-| focus      | triggers when Input focuses     | (event: Event)         |
+:::
 
-## Methods
+## With prefix and suffix ^(2.8.4)
 
-| Method | Description                      | Parameters |
-| ------ | -------------------------------- | ---------- |
-| focus  | get focus the input component    | -          |
-| blur   | remove focus the input component | —          |
+:::demo Use the prefix and suffix named slots.
+
+input-number/with-prefix-suffix
+
+:::
+
+## API
+
+### Attributes
+
+| Name                        | Description                                      | Type                                          | Default   |
+| --------------------------- | ------------------------------------------------ | --------------------------------------------- | --------- |
+| model-value / v-model       | binding value                                    | ^[number]                                     | —         |
+| min                         | the minimum allowed value                        | ^[number]                                     | -Infinity |
+| max                         | the maximum allowed value                        | ^[number]                                     | Infinity  |
+| step                        | incremental step                                 | ^[number]                                     | 1         |
+| step-strictly               | whether input value can only be multiple of step | ^[boolean]                                    | false     |
+| precision                   | precision of input value                         | ^[number]                                     | —         |
+| size                        | size of the component                            | ^[enum]`'large' \| 'default' \| 'small'`      | default   |
+| readonly ^(2.2.16)          | same as `readonly` in native input               | ^[boolean]                                    | false     |
+| disabled                    | whether the component is disabled                | ^[boolean]                                    | false     |
+| controls                    | whether to enable the control buttons            | ^[boolean]                                    | true      |
+| controls-position           | position of the control buttons                  | ^[enum]`'' \| 'right'`                        | —         |
+| name                        | same as `name` in native input                   | ^[string]                                     | —         |
+| aria-label ^(a11y) ^(2.7.2) | same as `aria-label` in native input             | ^[string]                                     | —         |
+| placeholder                 | same as `placeholder` in native input            | ^[string]                                     | —         |
+| id                          | same as `id` in native input                     | ^[string]                                     | —         |
+| value-on-clear ^(2.2.0)     | value should be set when input box is cleared    | ^[number] / ^[null] / ^[enum]`'min' \| 'max'` | —         |
+| validate-event              | whether to trigger form validation               | ^[boolean]                                    | true      |
+| label ^(a11y) ^(deprecated) | same as `aria-label` in native input             | ^[string]                                     | —         |
+
+### Slots
+
+| Name                   | Description                           |
+| ---------------------- | ------------------------------------- |
+| decrease-icon ^(2.6.3) | custom input box button decrease icon |
+| increase-icon ^(2.6.3) | custom input box button increase icon |
+| prefix ^(2.8.4)        | content as Input prefix               |
+| suffix ^(2.8.4)        | content as Input suffix               |
+
+### Events
+
+| Name   | Description                     | Type                                                                                    |
+| ------ | ------------------------------- | --------------------------------------------------------------------------------------- |
+| change | triggers when the value changes | ^[Function]`(currentValue: number \| undefined, oldValue: number \| undefined) => void` |
+| blur   | triggers when Input blurs       | ^[Function]`(event: FocusEvent) => void`                                                |
+| focus  | triggers when Input focuses     | ^[Function]`(event: FocusEvent) => void`                                                |
+
+### Exposes
+
+| Name  | Description                      | Type                    |
+| ----- | -------------------------------- | ----------------------- |
+| focus | get focus the input component    | ^[Function]`() => void` |
+| blur  | remove focus the input component | ^[Function]`() => void` |

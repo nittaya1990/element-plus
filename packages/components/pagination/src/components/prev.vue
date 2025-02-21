@@ -3,42 +3,33 @@
     type="button"
     class="btn-prev"
     :disabled="internalDisabled"
+    :aria-label="prevText || t('el.pagination.prev')"
     :aria-disabled="internalDisabled"
     @click="$emit('click', $event)"
   >
     <span v-if="prevText">{{ prevText }}</span>
-    <i v-else class="el-icon el-icon-arrow-left"></i>
+    <el-icon v-else>
+      <component :is="prevIcon" />
+    </el-icon>
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
+import { useLocale } from '@element-plus/hooks'
+import { ElIcon } from '@element-plus/components/icon'
+import { paginationPrevEmits, paginationPrevProps } from './prev'
 
-const paginationPrevProps = {
-  disabled: Boolean,
-  currentPage: {
-    type: Number,
-    default: 1,
-  },
-  prevText: {
-    type: String,
-    default: '',
-  },
-} as const
-
-export default defineComponent({
+defineOptions({
   name: 'ElPaginationPrev',
-
-  props: paginationPrevProps,
-  emits: ['click'],
-
-  setup(props) {
-    const internalDisabled = computed(
-      () => props.disabled || props.currentPage <= 1
-    )
-    return {
-      internalDisabled,
-    }
-  },
 })
+
+const props = defineProps(paginationPrevProps)
+defineEmits(paginationPrevEmits)
+
+const { t } = useLocale()
+
+const internalDisabled = computed(
+  () => props.disabled || props.currentPage <= 1
+)
 </script>

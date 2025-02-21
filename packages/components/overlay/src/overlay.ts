@@ -1,37 +1,35 @@
-import { createVNode, defineComponent, renderSlot, h } from 'vue'
-import { PatchFlags } from '@element-plus/utils/vnode'
-import { useSameTarget } from '@element-plus/hooks'
-import { buildProp, definePropType } from '@element-plus/utils/props'
+import { createVNode, defineComponent, h, renderSlot } from 'vue'
+import { PatchFlags, buildProps, definePropType } from '@element-plus/utils'
+import { useNamespace, useSameTarget } from '@element-plus/hooks'
 
-import type { ExtractPropTypes, CSSProperties } from 'vue'
+import type { CSSProperties, ExtractPropTypes } from 'vue'
 import type { ZIndexProperty } from 'csstype'
 
-export const overlayProps = {
+export const overlayProps = buildProps({
   mask: {
     type: Boolean,
     default: true,
   },
-  customMaskEvent: {
-    type: Boolean,
-    default: false,
-  },
-  overlayClass: buildProp({
+  customMaskEvent: Boolean,
+  overlayClass: {
     type: definePropType<string | string[] | Record<string, boolean>>([
       String,
       Array,
       Object,
     ]),
-  }),
-  zIndex: buildProp({
+  },
+  zIndex: {
     type: definePropType<ZIndexProperty>([String, Number]),
-  }),
-} as const
+  },
+} as const)
 export type OverlayProps = ExtractPropTypes<typeof overlayProps>
 
 export const overlayEmits = {
   click: (evt: MouseEvent) => evt instanceof MouseEvent,
 }
 export type OverlayEmits = typeof overlayEmits
+
+const BLOCK = 'overlay'
 
 export default defineComponent({
   name: 'ElOverlay',
@@ -40,6 +38,10 @@ export default defineComponent({
   emits: overlayEmits,
 
   setup(props, { slots, emit }) {
+    // No reactivity on this prop because when its rendering with a global
+    // component, this will be a constant flag.
+    const ns = useNamespace(BLOCK)
+
     const onMaskClick = (e: MouseEvent) => {
       emit('click', e)
     }
@@ -56,7 +58,7 @@ export default defineComponent({
         ? createVNode(
             'div',
             {
-              class: ['el-overlay', props.overlayClass],
+              class: [ns.b(), props.overlayClass],
               style: {
                 zIndex: props.zIndex,
               },

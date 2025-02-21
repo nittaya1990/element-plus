@@ -49,19 +49,12 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script lang="ts" setup>
+import { ref } from 'vue'
+import type { CollapseModelValue } from 'element-plus'
 
-export default defineComponent({
-  setup() {
-    const activeNames = ref(['1'])
-    const handleChange = (val) => {
-      console.log(val)
-    }
-    return {
-      activeNames,
-      handleChange,
-    }
-  },
-})
+const activeNames = ref(['1'])
+const handleChange = (val: CollapseModelValue) => {
+  console.log(val)
+}
 </script>

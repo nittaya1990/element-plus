@@ -1,28 +1,23 @@
 <template>
   <div
-    class="el-select-dropdown"
-    :class="[{ 'is-multiple': isMultiple }, popperClass]"
-    :style="{ minWidth: minWidth }"
+    :class="[ns.b('dropdown'), ns.is('multiple', isMultiple), popperClass]"
+    :style="{ [isFitInputWidth ? 'width' : 'minWidth']: minWidth }"
   >
-    <slot></slot>
+    <div v-if="$slots.header" :class="ns.be('dropdown', 'header')">
+      <slot name="header" />
+    </div>
+    <slot />
+    <div v-if="$slots.footer" :class="ns.be('dropdown', 'footer')">
+      <slot name="footer" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  onMounted,
-  onBeforeUnmount,
-  inject,
-  ref,
-} from 'vue'
-import {
-  addResizeListener,
-  removeResizeListener,
-} from '@element-plus/utils/resize-event'
+import { computed, defineComponent, inject, onMounted, ref } from 'vue'
+import { useResizeObserver } from '@vueuse/core'
+import { useNamespace } from '@element-plus/hooks'
 import { selectKey } from './token'
-import type { ResizableElement } from '@element-plus/utils/resize-event'
 
 export default defineComponent({
   name: 'ElSelectDropdown',
@@ -30,40 +25,32 @@ export default defineComponent({
   componentName: 'ElSelectDropdown',
 
   setup() {
-    const select = inject(selectKey)
+    const select = inject(selectKey)!
+    const ns = useNamespace('select')
 
     // computed
     const popperClass = computed(() => select.props.popperClass)
     const isMultiple = computed(() => select.props.multiple)
+    const isFitInputWidth = computed(() => select.props.fitInputWidth)
     const minWidth = ref('')
 
     function updateMinWidth() {
-      minWidth.value = `${
-        select.selectWrapper?.getBoundingClientRect().width
-      }px`
+      minWidth.value = `${select.selectRef?.offsetWidth}px`
     }
 
     onMounted(() => {
       // TODO: updatePopper
       // popper.value.update()
-
-      addResizeListener(
-        select.selectWrapper as ResizableElement,
-        updateMinWidth
-      )
-    })
-
-    onBeforeUnmount(() => {
-      removeResizeListener(
-        select.selectWrapper as ResizableElement,
-        updateMinWidth
-      )
+      updateMinWidth()
+      useResizeObserver(select.selectRef, updateMinWidth)
     })
 
     return {
+      ns,
       minWidth,
       popperClass,
       isMultiple,
+      isFitInputWidth,
     }
   },
 })

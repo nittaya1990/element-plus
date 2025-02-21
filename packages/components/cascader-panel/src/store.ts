@@ -1,12 +1,12 @@
-import isEqual from 'lodash/isEqual'
+import { isEqual } from 'lodash-unified'
 import Node from './node'
 
-import type { Nullable } from '@element-plus/utils/types'
+import type { Nullable } from '@element-plus/utils'
 import type {
-  CascaderNodeValue,
-  CascaderNodePathValue,
-  CascaderOption,
   CascaderConfig,
+  CascaderNodePathValue,
+  CascaderNodeValue,
+  CascaderOption,
 } from './node'
 
 const flatNodes = (nodes: Node[], leafOnly: boolean) => {
@@ -50,12 +50,21 @@ export default class Store {
 
     if (!parentNode) this.nodes.push(node)
 
-    this.allNodes.push(node)
-    node.isLeaf && this.leafNodes.push(node)
+    this.appendAllNodesAndLeafNodes(node)
   }
 
   appendNodes(nodeDataList: CascaderOption[], parentNode: Node) {
     nodeDataList.forEach((nodeData) => this.appendNode(nodeData, parentNode))
+  }
+
+  appendAllNodesAndLeafNodes(node: Node) {
+    this.allNodes.push(node)
+    node.isLeaf && this.leafNodes.push(node)
+    if (node.children) {
+      node.children.forEach((subNode) => {
+        this.appendAllNodesAndLeafNodes(subNode)
+      })
+    }
   }
 
   // when checkStrictly, leaf node first
@@ -65,20 +74,20 @@ export default class Store {
   ): Nullable<Node> {
     if (!value && value !== 0) return null
 
-    const nodes = this.getFlattedNodes(leafOnly).filter(
+    const node = this.getFlattedNodes(leafOnly).find(
       (node) => isEqual(node.value, value) || isEqual(node.pathValues, value)
     )
 
-    return nodes[0] || null
+    return node || null
   }
 
   getSameNode(node: Node): Nullable<Node> {
     if (!node) return null
 
-    const nodes = this.getFlattedNodes(false).filter(
+    const node_ = this.getFlattedNodes(false).find(
       ({ value, level }) => isEqual(node.value, value) && node.level === level
     )
 
-    return nodes[0] || null
+    return node_ || null
   }
 }

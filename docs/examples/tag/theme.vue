@@ -1,6 +1,6 @@
 <template>
-  <div class="tag-group">
-    <span class="tag-group__title">Dark</span>
+  <div class="flex gap-2">
+    <span>Dark</span>
     <el-tag
       v-for="item in items"
       :key="item.label"
@@ -10,8 +10,19 @@
       {{ item.label }}
     </el-tag>
   </div>
-  <div class="tag-group">
-    <span class="tag-group__title">Plain</span>
+  <div class="flex gap-2 mt-4">
+    <span>Light</span>
+    <el-tag
+      v-for="item in items"
+      :key="item.label"
+      :type="item.type"
+      effect="light"
+    >
+      {{ item.label }}
+    </el-tag>
+  </div>
+  <div class="flex gap-2 mt-4">
+    <span>Plain</span>
     <el-tag
       v-for="item in items"
       :key="item.label"
@@ -23,28 +34,18 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  data() {
-    return {
-      items: [
-        { type: '', label: 'Tag 1' },
-        { type: 'success', label: 'Tag 2' },
-        { type: 'info', label: 'Tag 3' },
-        { type: 'danger', label: 'Tag 4' },
-        { type: 'warning', label: 'Tag 5' },
-      ],
-    }
-  },
-}
+<script lang="ts" setup>
+import { ref } from 'vue'
+
+import type { TagProps } from 'element-plus'
+
+type Item = { type: TagProps['type']; label: string }
+
+const items = ref<Array<Item>>([
+  { type: 'primary', label: 'Tag 1' },
+  { type: 'success', label: 'Tag 2' },
+  { type: 'info', label: 'Tag 3' },
+  { type: 'warning', label: 'Tag 4' },
+  { type: 'danger', label: 'Tag 5' },
+])
 </script>
-
-<style lang="scss">
-.tag-group {
-  margin-bottom: 8px;
-
-  &__title {
-    margin-right: 8px;
-  }
-}
-</style>

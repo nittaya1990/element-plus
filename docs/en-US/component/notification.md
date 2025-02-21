@@ -1,3 +1,8 @@
+---
+title: Notification
+lang: en-US
+---
+
 # Notification
 
 Displays a global notification message at a corner of the page.
@@ -56,6 +61,18 @@ Although `message` property supports HTML strings, dynamically rendering arbitra
 
 :::
 
+## Message using functions ^(2.9.0)
+
+`message` can be VNode.
+
+After ^(2.9.0), `message` supports a function whose return value is a VNode.
+
+:::demo
+
+notification/use-vnode
+
+:::
+
 ## Hide close button
 
 It is possible to hide the close button
@@ -78,26 +95,52 @@ import { ElNotification } from 'element-plus'
 
 In this case you should call `ElNotification(options)`. We have also registered methods for different types, e.g. `ElNotification.success(options)`. You can call `ElNotification.closeAll()` to manually close all the instances.
 
-## Options
+## App context inheritance <el-tag>> 2.0.4</el-tag>
 
-| Attribute                | Description                                                                                                        | Type             | Accepted Values                             | Default   |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------ | ---------------- | ------------------------------------------- | --------- |
-| title                    | title                                                                                                              | string           | —                                           | —         |
-| message                  | description text                                                                                                   | string/Vue.VNode | —                                           | —         |
-| dangerouslyUseHTMLString | whether `message` is treated as HTML string                                                                        | boolean          | —                                           | false     |
-| type                     | notification type                                                                                                  | string           | success/warning/info/error                  | —         |
-| iconClass                | custom icon's class. It will be overridden by `type`                                                               | string           | —                                           | —         |
-| customClass              | custom class name for Notification                                                                                 | string           | —                                           | —         |
-| duration                 | duration before close. It will not automatically close if set 0                                                    | number           | —                                           | 4500      |
-| position                 | custom position                                                                                                    | string           | top-right/top-left/bottom-right/bottom-left | top-right |
-| showClose                | whether to show a close button                                                                                     | boolean          | —                                           | true      |
-| onClose                  | callback function when closed                                                                                      | function         | —                                           | —         |
-| onClick                  | callback function when notification clicked                                                                        | function         | —                                           | —         |
-| offset                   | offset from the top edge of the screen. Every Notification instance of the same moment should have the same offset | number           | —                                           | 0         |
+Now notification accepts a `context` as second parameter of the message constructor which allows you to inject current app's context to notification which allows you to inherit all the properties of the app.
 
-## Methods
+You can use it like this:
+
+:::tip
+
+If you globally registered ElNotification component, it will automatically inherit your app context.
+
+:::
+
+```ts
+import { getCurrentInstance } from 'vue'
+import { ElNotification } from 'element-plus'
+
+// in your setup method
+const { appContext } = getCurrentInstance()!
+ElNotification({}, appContext)
+```
+
+## API
+
+### Options
+
+| Name                     | Description                                                                                                        | Type                                                                  | Default   |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- | --------- |
+| title                    | title                                                                                                              | ^[string]                                                             | ''        |
+| message                  | description text                                                                                                   | ^[string] / ^[VNode] / ^[Function]`() => VNode`                       | ''        |
+| dangerouslyUseHTMLString | whether `message` is treated as HTML string                                                                        | ^[boolean]                                                            | false     |
+| type                     | notification type                                                                                                  | ^[enum]`'success' \| 'warning' \| 'info' \| 'error' \| ''`            | ''        |
+| icon                     | custom icon component. It will be overridden by `type`                                                             | ^[string] / ^[Component]                                              | —         |
+| customClass              | custom class name for Notification                                                                                 | ^[string]                                                             | ''        |
+| duration                 | duration before close. It will not automatically close if set 0                                                    | ^[number]                                                             | 4500      |
+| position                 | custom position                                                                                                    | ^[enum]`'top-right' \| 'top-left' \| 'bottom-right' \| 'bottom-left'` | top-right |
+| showClose                | whether to show a close button                                                                                     | ^[boolean]                                                            | true      |
+| onClose                  | callback function when closed                                                                                      | ^[Function]`() => void`                                               | —         |
+| onClick                  | callback function when notification clicked                                                                        | ^[Function]`() => void`                                               | —         |
+| offset                   | offset from the top edge of the screen. Every Notification instance of the same moment should have the same offset | ^[number]                                                             | 0         |
+| appendTo                 | set the root element for the notification, default to `document.body`                                              | ^[string] / ^[HTMLElement]                                            | —         |
+| zIndex                   | initial zIndex                                                                                                     | ^[number]                                                             | 0         |
+
+### Method
 
 `Notification` and `this.$notify` returns the current Notification instance. To manually close the instance, you can call `close` on it.
-| Method | Description |
-| ---- | ---- |
-| close | close the Notification |
+
+| Name  | Description            | Type                    |
+| ----- | ---------------------- | ----------------------- |
+| close | close the Notification | ^[Function]`() => void` |

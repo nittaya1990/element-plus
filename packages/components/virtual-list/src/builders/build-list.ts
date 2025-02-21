@@ -1,39 +1,40 @@
 import {
+  Fragment,
   computed,
   defineComponent,
   getCurrentInstance,
-  ref,
+  h,
   nextTick,
+  onActivated,
   onMounted,
   onUpdated,
+  ref,
   resolveDynamicComponent,
-  h,
   unref,
 } from 'vue'
-import { hasOwn } from '@vue/shared'
-
-import { isNumber, isString } from '@element-plus/utils/util'
-import isServer from '@element-plus/utils/isServer'
-
+import { useEventListener } from '@vueuse/core'
+import { hasOwn, isClient, isNumber, isString } from '@element-plus/utils'
+import { useNamespace } from '@element-plus/hooks'
 import { useCache } from '../hooks/use-cache'
 import useWheel from '../hooks/use-wheel'
 import Scrollbar from '../components/scrollbar'
-import { getScrollDir, isHorizontal, getRTLOffsetType } from '../utils'
+import { getRTLOffsetType, getScrollDir, isHorizontal } from '../utils'
 import { virtualizedListProps } from '../props'
 import {
   AUTO_ALIGNMENT,
   BACKWARD,
   FORWARD,
-  RTL,
   HORIZONTAL,
   ITEM_RENDER_EVT,
-  SCROLL_EVT,
+  RTL,
   RTL_OFFSET_NAG,
+  RTL_OFFSET_POS_ASC,
   RTL_OFFSET_POS_DESC,
+  SCROLL_EVT,
 } from '../defaults'
 
-import type { VNode, CSSProperties, Slot, VNodeChild } from 'vue'
-import type { ListConstructorProps, Alignment } from '../types'
+import type { CSSProperties, Slot, VNode, VNodeChild } from 'vue'
+import type { Alignment, ListConstructorProps } from '../types'
 import type { VirtualizedListProps } from '../props'
 
 const createList = ({
@@ -55,9 +56,12 @@ const createList = ({
     setup(props, { emit, expose }) {
       validateProps(props)
       const instance = getCurrentInstance()!
+
+      const ns = useNamespace('vl')
+
       const dynamicSizeCache = ref(initCache(props, instance))
 
-      const getItemStyleCache = useCache()
+      const getItemStyleCache = useCache<CSSProperties>()
       // refs
       // here windowRef and innerRef can be type of HTMLElement
       // or user defined component type, depends on the type passed
@@ -65,7 +69,6 @@ const createList = ({
       const windowRef = ref<HTMLElement>()
       const innerRef = ref<HTMLElement>()
       const scrollbarRef = ref()
-
       const states = ref({
         isScrolling: false,
         scrollDir: 'forward',
@@ -74,6 +77,7 @@ const createList = ({
           : 0,
         updateRequested: false,
         isScrollbarDragging: false,
+        scrollbarAlwaysOn: props.scrollbarAlwaysOn,
       })
 
       // computed
@@ -119,7 +123,7 @@ const createList = ({
       const windowStyle = computed(() => [
         {
           position: 'relative',
-          overflow: 'hidden',
+          [`overflow-${_isHorizontal.value ? 'x' : 'y'}`]: 'scroll',
           WebkitOverflowScrolling: 'touch',
           willChange: 'transform',
         },
@@ -168,6 +172,10 @@ const createList = ({
           )
         }
       )
+
+      useEventListener(windowRef, 'wheel', onWheel, {
+        passive: false,
+      })
 
       const emitEvents = () => {
         const { total } = props
@@ -358,7 +366,7 @@ const createList = ({
 
       // life cycles
       onMounted(() => {
-        if (isServer) return
+        if (!isClient) return
         const { initScrollOffset } = props
         const windowElement = unref(windowRef)
         if (isNumber(initScrollOffset) && windowElement) {
@@ -384,11 +392,11 @@ const createList = ({
               // This is not the case for all browsers though (e.g. Chrome reports values as positive, measured relative to the left).
               // So we need to determine which browser behavior we're dealing with, and mimic it.
               switch (getRTLOffsetType()) {
-                case 'negative': {
+                case RTL_OFFSET_NAG: {
                   windowElement.scrollLeft = -scrollOffset
                   break
                 }
-                case 'positive-ascending': {
+                case RTL_OFFSET_POS_ASC: {
                   windowElement.scrollLeft = scrollOffset
                   break
                 }
@@ -408,7 +416,12 @@ const createList = ({
         }
       })
 
+      onActivated(() => {
+        unref(windowRef)!.scrollTop = unref(states).scrollOffset
+      })
+
       const api = {
+        ns,
         clientSize,
         estimatedTotalSize,
         windowStyle,
@@ -455,10 +468,10 @@ const createList = ({
         total,
         onScroll,
         onScrollbarScroll,
-        onWheel,
         states,
         useIsScrolling,
         windowStyle,
+        ns,
       } = ctx
 
       const [start, end] = itemsToRender
@@ -471,13 +484,16 @@ const createList = ({
       if (total > 0) {
         for (let i = start; i <= end; i++) {
           children.push(
-            ($slots.default as Slot)?.({
-              data,
-              key: i,
-              index: i,
-              isScrolling: useIsScrolling ? states.isScrolling : undefined,
-              style: getItemStyle(i),
-            })
+            h(
+              Fragment,
+              { key: i },
+              ($slots.default as Slot)?.({
+                data,
+                index: i,
+                isScrolling: useIsScrolling ? states.isScrolling : undefined,
+                style: getItemStyle(i),
+              })
+            )
           )
         }
       }
@@ -506,16 +522,14 @@ const createList = ({
         scrollFrom:
           states.scrollOffset / (this.estimatedTotalSize - clientSize),
         total,
-        visible: true,
       })
 
       const listContainer = h(
         Container as VNode,
         {
-          class: className,
+          class: [ns.e('window'), className],
           style: windowStyle,
           onScroll,
-          onWheel,
           ref: 'windowRef',
           key: 0,
         },
@@ -526,7 +540,7 @@ const createList = ({
         'div',
         {
           key: 0,
-          class: 'el-vl__wrapper',
+          class: [ns.e('wrapper'), states.scrollbarAlwaysOn ? 'always-on' : ''],
         },
         [listContainer, scrollbar]
       )

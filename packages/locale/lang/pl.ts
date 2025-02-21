@@ -1,6 +1,9 @@
 export default {
   name: 'pl',
   el: {
+    breadcrumb: {
+      label: 'Breadcrumb', // to be translated
+    },
     colorpicker: {
       confirm: 'OK',
       clear: 'Wyczyść',
@@ -65,6 +68,9 @@ export default {
       noData: 'Brak danych',
       placeholder: 'Wybierz',
     },
+    mention: {
+      loading: 'Ładowanie',
+    },
     cascader: {
       noMatch: 'Brak dopasowań',
       loading: 'Ładowanie',
@@ -73,9 +79,15 @@ export default {
     },
     pagination: {
       goto: 'Idź do',
-      pagesize: '/strona',
+      pagesize: '/stronę',
       total: 'Wszystkich {total}',
       pageClassifier: '',
+      page: 'Page', // to be translated
+      prev: 'Go to previous page', // to be translated
+      next: 'Go to next page', // to be translated
+      currentPage: 'page {pager}', // to be translated
+      prevPages: 'Previous {pager} pages', // to be translated
+      nextPages: 'Next {pager} pages', // to be translated
     },
     messagebox: {
       title: 'Wiadomość',
@@ -96,6 +108,11 @@ export default {
       clearFilter: 'Wszystko',
       sumText: 'Razem',
     },
+    tour: {
+      next: 'Dalej',
+      previous: 'Wróć',
+      finish: 'Zakończ',
+    },
     tree: {
       emptyText: 'Brak danych',
     },
@@ -108,14 +125,19 @@ export default {
       hasCheckedFormat: 'wybranych: {checked}/{total}',
     },
     image: {
-      error: 'FAILED', // to be translated
+      error: 'BŁĄD',
     },
     pageHeader: {
-      title: 'Back', // to be translated
+      title: 'Wstecz',
     },
     popconfirm: {
-      confirmButtonText: 'Yes', // to be translated
-      cancelButtonText: 'No', // to be translated
+      confirmButtonText: 'Tak',
+      cancelButtonText: 'Nie',
+    },
+    carousel: {
+      leftArrow: 'Carousel arrow left', // to be translated
+      rightArrow: 'Carousel arrow right', // to be translated
+      indicator: 'Carousel switch to index {index}', // to be translated
     },
   },
 }

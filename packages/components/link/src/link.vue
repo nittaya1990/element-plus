@@ -1,41 +1,41 @@
 <template>
   <a
-    :class="[
-      'el-link',
-      type ? `el-link--${type}` : '',
-      disabled && 'is-disabled',
-      underline && !disabled && 'is-underline',
-    ]"
+    :class="linkKls"
     :href="disabled || !href ? undefined : href"
+    :target="disabled || !href ? undefined : target"
     @click="handleClick"
   >
-    <i v-if="icon" :class="icon"></i>
-
-    <span v-if="$slots.default" class="el-link--inner">
-      <slot></slot>
+    <el-icon v-if="icon"><component :is="icon" /></el-icon>
+    <span v-if="$slots.default" :class="ns.e('inner')">
+      <slot />
     </span>
 
-    <slot v-if="$slots.icon" name="icon"></slot>
+    <slot v-if="$slots.icon" name="icon" />
   </a>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { linkProps, linkEmits } from './link'
 
-export default defineComponent({
+<script lang="ts" setup>
+import { computed } from 'vue'
+import { ElIcon } from '@element-plus/components/icon'
+import { useNamespace } from '@element-plus/hooks'
+import { linkEmits, linkProps } from './link'
+
+defineOptions({
   name: 'ElLink',
-
-  props: linkProps,
-  emits: linkEmits,
-
-  setup(props, { emit }) {
-    function handleClick(event: MouseEvent) {
-      if (!props.disabled) emit('click', event)
-    }
-
-    return {
-      handleClick,
-    }
-  },
 })
+const props = defineProps(linkProps)
+const emit = defineEmits(linkEmits)
+
+const ns = useNamespace('link')
+
+const linkKls = computed(() => [
+  ns.b(),
+  ns.m(props.type),
+  ns.is('disabled', props.disabled),
+  ns.is('underline', props.underline && !props.disabled),
+])
+
+function handleClick(event: MouseEvent) {
+  if (!props.disabled) emit('click', event)
+}
 </script>

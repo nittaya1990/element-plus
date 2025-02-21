@@ -1,23 +1,11 @@
+---
+title: Tabs
+lang: en-US
+---
+
 # Tabs
 
 Divide data collections which are related yet belong to different types.
-
-<style lang="scss">
-
-:not(.el-tabs--border-card) > .el-tabs__content {
-  padding: 32px;
-  background-color: #F4F5F7;
-  color: #6B778C;
-  font-size: 32px;
-  font-weight: 600;
-}
-
-.el-tabs--right, .el-tabs--left {
-  .el-tabs__content {
-    height: 100%;
-  }
-}
-</style>
 
 ## Basic usage
 
@@ -79,6 +67,14 @@ tabs/dynamic-tabs
 
 :::
 
+## Customized add button icon ^(2.4.0)
+
+:::demo
+
+tabs/customized-add-button-icon
+
+:::
+
 ## Customized trigger button of new tab
 
 :::demo
@@ -87,41 +83,54 @@ tabs/customized-trigger
 
 :::
 
-## Tabs Attributes
+## Tabs API
 
-| Attribute             | Description                                                                                                                             | Type                                | Accepted Values       | Default           |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | --------------------- | ----------------- |
-| model-value / v-model | binding value, name of the selected tab                                                                                                 | string                              | —                     | name of first tab |
-| type                  | type of Tab                                                                                                                             | string                              | card/border-card      | —                 |
-| closable              | whether Tab is closable                                                                                                                 | boolean                             | —                     | false             |
-| addable               | whether Tab is addable                                                                                                                  | boolean                             | —                     | false             |
-| editable              | whether Tab is addable and closable                                                                                                     | boolean                             | —                     | false             |
-| tab-position          | position of tabs                                                                                                                        | string                              | top/right/bottom/left | top               |
-| stretch               | whether width of tab automatically fits its container                                                                                   | boolean                             | -                     | false             |
-| before-leave          | hook function before switching tab. If `false` is returned or a `Promise` is returned and then is rejected, switching will be prevented | Function(activeName, oldActiveName) | —                     | —                 |
+### Attributes
 
-## Tabs Events
+| Name                  | Description                                                                                                                             | Type                                                                                             | Default    |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ---------- |
+| model-value / v-model | binding value, name of the selected tab, the default value is the name of first tab                                                     | ^[string] / ^[number]                                                                            | —          |
+| type                  | type of Tab                                                                                                                             | ^[enum]`'' \| 'card' \| 'border-card'`                                                           | ''         |
+| closable              | whether Tab is closable                                                                                                                 | ^[boolean]                                                                                       | false      |
+| addable               | whether Tab is addable                                                                                                                  | ^[boolean]                                                                                       | false      |
+| editable              | whether Tab is addable and closable                                                                                                     | ^[boolean]                                                                                       | false      |
+| tab-position          | position of tabs                                                                                                                        | ^[enum]`'top' \| 'right' \| 'bottom' \| 'left'`                                                  | top        |
+| stretch               | whether width of tab automatically fits its container                                                                                   | ^[boolean]                                                                                       | false      |
+| before-leave          | hook function before switching tab. If `false` is returned or a `Promise` is returned and then is rejected, switching will be prevented | ^[Function]`(activeName: TabPaneName, oldActiveName: TabPaneName) => Awaitable<void \| boolean>` | () => true |
 
-| Event Name | Description                                           | Parameters              |
-| ---------- | ----------------------------------------------------- | ----------------------- |
-| tab-click  | triggers when a tab is clicked                        | clicked tab             |
-| tab-remove | triggers when tab-remove button is clicked            | name of the removed tab |
-| tab-add    | triggers when tab-add button is clicked               | —                       |
-| edit       | triggers when tab-add button or tab-remove is clicked | (targetName, action)    |
+### Events
 
-## Tab-pane Attributes
+| Name       | Description                                           | Parameters                                                                           |
+| ---------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| tab-click  | triggers when a tab is clicked                        | ^[Function]`(pane: TabsPaneContext, ev: Event) => void`                              |
+| tab-change | triggers when `activeName` is changed                 | ^[Function]`(name: TabPaneName) => void`                                             |
+| tab-remove | triggers when tab-remove button is clicked            | ^[Function]`(name: TabPaneName) => void`                                             |
+| tab-add    | triggers when tab-add button is clicked               | ^[Function]`() => void`                                                              |
+| edit       | triggers when tab-add button or tab-remove is clicked | ^[Function]`(paneName: TabPaneName \| undefined, action: 'remove' \| 'add') => void` |
 
-| Attribute | Description                                                                          | Type    | Accepted Values | Default                                                                        |
-| --------- | ------------------------------------------------------------------------------------ | ------- | --------------- | ------------------------------------------------------------------------------ |
-| label     | title of the tab                                                                     | string  | —               | —                                                                              |
-| disabled  | whether Tab is disabled                                                              | boolean | —               | false                                                                          |
-| name      | identifier corresponding to the name of Tabs, representing the alias of the tab-pane | string  | —               | ordinal number of the tab-pane in the sequence, e.g. the first tab-pane is '1' |
-| closable  | whether Tab is closable                                                              | boolean | —               | false                                                                          |
-| lazy      | whether Tab is lazily rendered                                                       | boolean | —               | false                                                                          |
+### Slots
 
-## Tab-pane Slots
+| Name                           | Description               | Subtags  |
+| ------------------------------ | ------------------------- | -------- |
+| default                        | customize default content | Tab-pane |
+| add-icon ^(2.5.4)              | customize add button icon | —        |
+| addIcon ^(2.4.0) ^(deprecated) | customize add button icon | —        |
 
-| Name  | Description        |
-| ----- | ------------------ |
-| -     | Tab-pane's content |
-| label | Tab-pane's label   |
+## Tab-pane API
+
+### Attributes
+
+| Name     | Description                                                                                                                                                                         | Type                  | Default |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- | ------- |
+| label    | title of the tab                                                                                                                                                                    | ^[string]             | ''      |
+| disabled | whether Tab is disabled                                                                                                                                                             | ^[boolean]            | false   |
+| name     | identifier corresponding to the name of Tabs, representing the alias of the tab-pane, the default is ordinal number of the tab-pane in the sequence, e.g. the first tab-pane is '0' | ^[string] / ^[number] | —       |
+| closable | whether Tab is closable                                                                                                                                                             | ^[boolean]            | false   |
+| lazy     | whether Tab is lazily rendered                                                                                                                                                      | ^[boolean]            | false   |
+
+### Slots
+
+| Name    | Description        |
+| ------- | ------------------ |
+| default | Tab-pane's content |
+| label   | Tab-pane's label   |

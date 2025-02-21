@@ -1,6 +1,9 @@
 export default {
   name: 'km',
   el: {
+    breadcrumb: {
+      label: 'Breadcrumb', // to be translated
+    },
     colorpicker: {
       confirm: 'យល់ព្រម',
       clear: 'លុប',
@@ -32,17 +35,17 @@ export default {
       month8: 'សីហា',
       month9: 'កញ្ញា',
       month10: 'តុលា',
-      month11: 'វិច្ឆកា',
+      month11: 'វិច្ឆិកា',
       month12: 'ធ្នូ',
-      // week: 'week',
+      // week: 'សប្តាហ៍',
       weeks: {
         sun: 'អាទិត្យ',
-        mon: 'Mon',
+        mon: 'ចន្ទ',
         tue: 'អង្គារ',
         wed: 'ពុធ',
-        thu: 'ព្រ.ហ',
+        thu: 'ព្រហ',
         fri: 'សុក្រ',
-        sat: 'សៅរ៏',
+        sat: 'សៅរ៍',
       },
       months: {
         jan: 'មករា',
@@ -55,33 +58,42 @@ export default {
         aug: 'សីហា',
         sep: 'កញ្ញា',
         oct: 'តុលា',
-        nov: 'វិច្ឆកា',
+        nov: 'វិច្ឆិកា',
         dec: 'ធ្នូ',
       },
     },
     select: {
       loading: 'កំពុងផ្ទុក',
-      noMatch: 'គ្មានទិន្ន័យដូច',
-      noData: 'គ្មានទិន្ន័យ',
+      noMatch: 'គ្មានទិន្នន័យដូច',
+      noData: 'គ្មានទិន្នន័យ',
       placeholder: 'ជ្រើសរើស',
     },
+    mention: {
+      loading: 'កំពុងផ្ទុក',
+    },
     cascader: {
-      noMatch: 'គ្មានទិន្ន័យដូច',
+      noMatch: 'គ្មានទិន្នន័យដូច',
       loading: 'កំពុងផ្ទុក',
       placeholder: 'ជ្រើសរើស',
-      noData: 'គ្មានទិន្ន័យ',
+      noData: 'គ្មានទិន្នន័យ',
     },
     pagination: {
       goto: 'ទៅកាន់',
       pagesize: '/ទំព័រ',
       total: 'សរុប {total}',
       pageClassifier: '',
+      page: 'Page', // to be translated
+      prev: 'Go to previous page', // to be translated
+      next: 'Go to next page', // to be translated
+      currentPage: 'page {pager}', // to be translated
+      prevPages: 'Previous {pager} pages', // to be translated
+      nextPages: 'Next {pager} pages', // to be translated
     },
     messagebox: {
       title: 'សារ',
       confirm: 'យល់ព្រម',
       cancel: 'បោះបង់',
-      error: 'ការបញ្ចូលមិនអនុញ្ញាត',
+      error: 'ការបញ្ចូលមិនត្រូវបានអនុញ្ញាត',
     },
     upload: {
       deleteTip: 'ចុចលុបដើម្បីដកចេញ',
@@ -90,32 +102,37 @@ export default {
       continue: 'បន្ត',
     },
     table: {
-      emptyText: 'គ្មានទិន្ន័យ',
+      emptyText: 'គ្មានទិន្នន័យ',
       confirmFilter: 'យល់ព្រម',
       resetFilter: 'កំណត់ឡើងវិញ',
       clearFilter: 'ទាំងអស់',
       sumText: 'បូក',
     },
     tree: {
-      emptyText: 'គ្មានទិន្ន័យ',
+      emptyText: 'គ្មានទិន្នន័យ',
     },
     transfer: {
-      noMatch: 'គ្មានទិន្ន័យដូច',
-      noData: 'គ្មានទិន្ន័យ',
+      noMatch: 'គ្មានទិន្នន័យដូច',
+      noData: 'គ្មានទិន្នន័យ',
       titles: ['បញ្ជី ១', 'បញ្ជី ២'],
       filterPlaceholder: 'បញ្ចូលពាក្យ',
       noCheckedFormat: '{total} ធាតុ',
-      hasCheckedFormat: '{checked}/{total} បានគូសធីក',
+      hasCheckedFormat: '{checked}/{total} បានជ្រើសយក',
     },
     image: {
-      error: 'FAILED', // to be translated
+      error: 'មិនបានជោគជ័យ',
     },
     pageHeader: {
-      title: 'Back', // to be translated
+      title: 'ត្រលប់ក្រោយ',
     },
     popconfirm: {
-      confirmButtonText: 'Yes', // to be translated
-      cancelButtonText: 'No', // to be translated
+      confirmButtonText: 'យល់ព្រម',
+      cancelButtonText: 'មិនព្រម',
+    },
+    carousel: {
+      leftArrow: 'Carousel arrow left', // to be translated
+      rightArrow: 'Carousel arrow right', // to be translated
+      indicator: 'Carousel switch to index {index}', // to be translated
     },
   },
 }

@@ -1,33 +1,25 @@
 import { computed } from 'vue'
 import { useData } from 'vitepress'
-import {
-  isArray,
-  ensureStartingSlash,
-  removeExtention as removeExtension,
-} from '../utils'
+import { isActive } from '../utils'
 import { useLang } from './lang'
-import { getSidebarConfig, getFlatSideBarLinks } from './sidebar'
+import { getFlatSideBarLinks, getSidebarConfig } from './sidebar'
 
 export function usePageNav() {
   const { page, theme } = useData()
   const lang = useLang()
 
-  const path = computed(() => {
-    return removeExtension(ensureStartingSlash(page.value.relativePath))
-  })
-
   const candidates = computed(() => {
     const config = getSidebarConfig(
       theme.value.sidebars,
-      path.value,
+      page.value.relativePath,
       lang.value
     )
-    return isArray(config) ? getFlatSideBarLinks(config) : []
+    return Array.isArray(config) ? getFlatSideBarLinks(config) : []
   })
 
   const index = computed(() => {
     return candidates.value.findIndex((item) => {
-      return item.link === path.value
+      return isActive(page.value.relativePath, item.link)
     })
   })
   const next = computed(() => {

@@ -1,109 +1,121 @@
 <template>
   <div
-    v-resize="update"
-    :class="['el-tabs__active-bar', `is-${rootTabs.props.tabPosition}`]"
+    ref="barRef"
+    :class="[ns.e('active-bar'), ns.is(rootTabs!.props.tabPosition)]"
     :style="barStyle"
-  ></div>
+  />
 </template>
-<script lang="ts">
+
+<script lang="ts" setup>
 import {
-  defineComponent,
-  inject,
   getCurrentInstance,
-  watch,
+  inject,
   nextTick,
+  onBeforeUnmount,
   ref,
+  watch,
 } from 'vue'
-import { capitalize } from '@vue/shared'
-import { Resize } from '@element-plus/directives'
-import type { Pane, RootTabs } from './token'
+import { useResizeObserver } from '@vueuse/core'
+import { capitalize, throwError } from '@element-plus/utils'
+import { useNamespace } from '@element-plus/hooks'
+import { tabsRootContextKey } from './constants'
+import { tabBarProps } from './tab-bar'
 
-import type { CSSProperties, PropType } from 'vue'
+import type { CSSProperties } from 'vue'
 
-export default defineComponent({
-  name: 'ElTabBar',
-  directives: {
-    Resize,
-  },
-  props: {
-    tabs: {
-      type: Array as PropType<Pane[]>,
-      default: () => [] as Pane[],
-    },
-  },
-  setup(props) {
-    const rootTabs = inject<RootTabs>('rootTabs')
-    if (!rootTabs) {
-      throw new Error(`ElTabBar must use with ElTabs`)
-    }
-    const instance = getCurrentInstance()
+const COMPONENT_NAME = 'ElTabBar'
+defineOptions({
+  name: COMPONENT_NAME,
+})
+const props = defineProps(tabBarProps)
 
-    const getBarStyle = () => {
-      const style = {} as CSSProperties
-      let offset = 0
-      let tabSize = 0
+const instance = getCurrentInstance()!
+const rootTabs = inject(tabsRootContextKey)
+if (!rootTabs) throwError(COMPONENT_NAME, '<el-tabs><el-tab-bar /></el-tabs>')
 
-      const sizeName = ['top', 'bottom'].includes(rootTabs.props.tabPosition)
-        ? 'width'
-        : 'height'
-      const sizeDir = sizeName === 'width' ? 'x' : 'y'
+const ns = useNamespace('tabs')
 
-      props.tabs.every((tab) => {
-        const $el = instance.parent.refs?.[`tab-${tab.paneName}`] as Element
-        if (!$el) {
-          return false
-        }
-        if (!tab.active) {
-          return true
-        } else {
-          tabSize = $el[`client${capitalize(sizeName)}`]
-          const position = sizeDir === 'x' ? 'left' : 'top'
-          offset =
-            $el.getBoundingClientRect()[position] -
-            $el.parentElement.getBoundingClientRect()[position]
-          const tabStyles = window.getComputedStyle($el)
+const barRef = ref<HTMLDivElement>()
+const barStyle = ref<CSSProperties>()
 
-          if (sizeName === 'width') {
-            if (props.tabs.length > 1) {
-              tabSize -=
-                parseFloat(tabStyles.paddingLeft) +
-                parseFloat(tabStyles.paddingRight)
-            }
-            offset += parseFloat(tabStyles.paddingLeft)
-          }
-          return false
-        }
-      })
+const getBarStyle = (): CSSProperties => {
+  let offset = 0
+  let tabSize = 0
 
-      const transform = `translate${capitalize(sizeDir)}(${offset}px)`
-      style[sizeName] = `${tabSize}px`
-      style.transform = transform
-      style.msTransform = transform
-      ;(style as any).webkitTransform = transform
+  const sizeName = ['top', 'bottom'].includes(rootTabs.props.tabPosition)
+    ? 'width'
+    : 'height'
+  const sizeDir = sizeName === 'width' ? 'x' : 'y'
+  const position = sizeDir === 'x' ? 'left' : 'top'
 
-      return style
+  props.tabs.every((tab) => {
+    const $el = instance.parent?.refs?.[`tab-${tab.uid}`] as HTMLElement
+    if (!$el) return false
+
+    if (!tab.active) {
+      return true
     }
 
-    const barStyle = ref(getBarStyle() as CSSProperties)
+    offset = $el[`offset${capitalize(position)}`]
+    tabSize = $el[`client${capitalize(sizeName)}`]
 
-    const update = () => {
-      barStyle.value = getBarStyle()
+    const tabStyles = window.getComputedStyle($el)
+
+    if (sizeName === 'width') {
+      tabSize -=
+        Number.parseFloat(tabStyles.paddingLeft) +
+        Number.parseFloat(tabStyles.paddingRight)
+      offset += Number.parseFloat(tabStyles.paddingLeft)
     }
+    return false
+  })
 
-    watch(
-      () => props.tabs,
-      () => {
-        nextTick(() => {
-          update()
-        })
+  return {
+    [sizeName]: `${tabSize}px`,
+    transform: `translate${capitalize(sizeDir)}(${offset}px)`,
+  }
+}
+
+const update = () => (barStyle.value = getBarStyle())
+
+const saveObserver = [] as ReturnType<typeof useResizeObserver>[]
+const observerTabs = () => {
+  saveObserver.forEach((observer) => observer.stop())
+  saveObserver.length = 0
+  const list = instance.parent?.refs as Record<string, HTMLElement>
+  if (!list) return
+  for (const key in list) {
+    if (key.startsWith('tab-')) {
+      const _el = list[key]
+      if (_el) {
+        saveObserver.push(useResizeObserver(_el, update))
       }
-    )
-
-    return {
-      rootTabs,
-      barStyle,
-      update,
     }
+  }
+}
+
+watch(
+  () => props.tabs,
+  async () => {
+    await nextTick()
+    update()
+
+    observerTabs()
   },
+  { immediate: true }
+)
+const barObserever = useResizeObserver(barRef, () => update())
+
+onBeforeUnmount(() => {
+  saveObserver.forEach((observer) => observer.stop())
+  saveObserver.length = 0
+  barObserever.stop()
+})
+
+defineExpose({
+  /** @description tab root html element */
+  ref: barRef,
+  /** @description method to manually update tab bar style */
+  update,
 })
 </script>

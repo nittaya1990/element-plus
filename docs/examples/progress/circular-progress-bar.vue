@@ -7,3 +7,9 @@
     <el-progress type="circle" :percentage="50" status="exception" />
   </div>
 </template>
+
+<style scoped>
+.demo-progress .el-progress--circle {
+  margin-right: 15px;
+}
+</style>

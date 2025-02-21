@@ -1,4 +1,4 @@
-import { throwError } from '@element-plus/utils/error'
+import { throwError } from '@element-plus/utils'
 
 import createList from '../builders/build-list'
 
@@ -13,7 +13,7 @@ import {
 } from '../defaults'
 import type { VirtualizedListProps } from '../props'
 
-import type { ListCache, ListItem, ItemSize } from '../types'
+import type { ItemSize, ListCache, ListItem } from '../types'
 
 type Props = VirtualizedListProps
 
@@ -254,4 +254,5 @@ const DynamicSizeList = createList({
   },
 })
 
+export type DynamicSizeListInstance = InstanceType<typeof DynamicSizeList>
 export default DynamicSizeList

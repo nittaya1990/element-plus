@@ -1,22 +1,32 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { usePreview, usePreviewPR } from '../../composables/use-playground'
 import type { Component } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   icon: Component
   link: string
   text: string
 }>()
+
+const targetLink = ref(props.link)
+
+onMounted(() => {
+  if (props.text === 'GitHub' && usePreview()) {
+    targetLink.value = `${targetLink.value}/pull/${usePreviewPR()}`
+  }
+})
 </script>
 
 <template>
   <a
-    :href="link"
+    :href="targetLink"
     :title="text"
     target="_blank"
     rel="noreferrer noopener"
     class="social-link"
   >
-    <ElIcon :size="20">
+    <ElIcon v-if="icon" :size="24">
       <component :is="icon" />
     </ElIcon>
   </a>
@@ -24,7 +34,6 @@ defineProps<{
 
 <style scoped lang="scss">
 .social-link {
-  padding: 0 4px;
   color: var(--text-color);
 }
 </style>
